@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Management | Fleet Pro</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #eef2ff;
+            --primary-dark: #4f46e5;
+            --bg-body: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --sidebar-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { display: flex; background: var(--bg-body); min-height: 100vh; color: var(--text-main); }
+
+        /* --- SIDEBAR --- */
+        .sidebar { width: 280px; background: var(--sidebar-bg); padding: 32px 20px; border-right: 1px solid #e2e8f0; position: fixed; height: 100vh; z-index: 100; }
+        .logo-container { display: flex; align-items: center; gap: 12px; padding: 0 12px; margin-bottom: 48px; }
+        .logo-icon { width: 35px; height: 35px; background: var(--primary); border-radius: 10px; display: grid; place-items: center; color: white; }
+        .logo-text { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+        .nav-item { padding: 12px 16px; margin-bottom: 6px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 12px; font-size: 15px; }
+        .nav-item:hover { background: #f1f5f9; color: var(--primary); }
+        .nav-item.active { background: var(--primary-light); color: var(--primary); }
+
+        /* --- MAIN CONTENT --- */
+        .main { margin-left: 280px; flex: 1; padding: 48px 60px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .top-bar h1 { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+        .btn-create { background: var(--primary); color: white; padding: 14px 24px; border-radius: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.3s; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+
+        /* --- ROUTE CARDS --- */
+        .route-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 28px; }
+        .route-card { background: white; padding: 28px; border-radius: 24px; border: 1px solid rgba(226, 232, 240, 0.7); box-shadow: var(--card-shadow); transition: 0.4s; position: relative; }
+        .route-card:hover { transform: translateY(-8px); border-color: var(--primary); }
+        .route-name { font-size: 19px; font-weight: 800; margin-bottom: 20px; }
+        .info-group { background: #f8fafc; padding: 16px; border-radius: 16px; margin-bottom: 20px; }
+        .info-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: var(--text-muted); }
+        .info-item b { color: var(--text-main); font-weight: 700; }
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: #f0fdf4; color: #16a34a; border-radius: 10px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+        .status-dot { width: 6px; height: 6px; background: #16a34a; border-radius: 50%; }
+        .btn-view { width: 100%; background: white; color: var(--primary); padding: 14px; border: 1.5px solid var(--primary-light); border-radius: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-view:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* --- MODAL STYLES --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; 
+            width: 100%; height: 100%; background: rgba(15, 23, 42, 0.4); 
+            backdrop-filter: blur(4px); z-index: 2000; justify-content: flex-end;
+        }
+        .modal-content {
+            width: 450px; height: 100%; background: white; padding: 40px; 
+            box-shadow: -10px 0 30px rgba(0,0,0,0.1); animation: slideIn 0.4s ease-out; 
+            display: flex; flex-direction: column; overflow-y: auto;
+        }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .close-modal { font-size: 28px; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
+        .close-modal:hover { color: #ef4444; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 700; font-size: 14px; margin-bottom: 8px; color: var(--text-main); }
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px; outline: none; transition: 0.2s;
+        }
+        .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-light); }
+
+        /* Stats in details */
+        .detail-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 40px; }
+        .stat-box { background: #f8fafc; padding: 20px 10px; border-radius: 16px; text-align: center; border: 1px solid #f1f5f9; }
+        .stat-box span { display: block; font-size: 20px; font-weight: 800; color: var(--primary); }
+        .stat-box p { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-top: 4px; }
+
+        .stops-timeline { border-left: 2px dashed #e2e8f0; padding-left: 30px; margin-left: 10px; position: relative; }
+        .timeline-item { position: relative; margin-bottom: 30px; font-size: 14px; }
+        .dot { width: 14px; height: 14px; background: #cbd5e1; border-radius: 50%; position: absolute; left: -38px; top: 5px; border: 3px solid white; }
+        .dot.active { background: var(--primary); box-shadow: 0 0 0 4px var(--primary-light); }
+        .sidebar {
+    width: 280px;
+    background: #ffffff;
+    padding: 32px 20px;
+    border-right: 1px solid #e2e8f0;
+    position: fixed;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    margin-bottom: 48px;
+    text-decoration: none;
+}
+
+.logo-icon {
+    width: 35px; height: 35px;
+    background: #6366f1; /* Your Primary Indigo */
+    border-radius: 10px;
+    display: grid; place-items: center;
+    color: white;
+}
+
+.logo-text { font-size: 20px; font-weight: 800; color: #0f172a; }
+
+.nav-group { flex: 1; }
+
+.nav-item {
+    padding: 12px 16px;
+    margin-bottom: 6px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 600;
+    color: #64748b; /* Muted text */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.nav-item:hover, .nav-item.active {
+    background: #eef2ff; /* Light Indigo bg */
+    color: #6366f1;
+}
+
+.sidebar-footer {
+    border-top: 1px solid #f1f5f9;
+    padding-top: 20px;
+    margin-top: auto;
+}
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo-container">
+        <div class="logo-icon"><i data-lucide="bus"></i></div>
+        <span class="logo-text">FLEETPRO</span>
+    </div>
+   <div class="sidebar">
+    <a href="index.html" class="logo-container">
+        <div class="logo-icon"><i data-lucide="bus"></i></div>
+        <span class="logo-text">FLEETPRO</span>
+    </a>
+    <nav class="nav-group">
+        <a href="index.html" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a href="fleet.html" class="nav-item"><i data-lucide="map"></i> Live Fleet</a>
+        <a href="bus-health.html" class="nav-item active"><i data-lucide="heart-pulse"></i> Bus Health</a>
+        <a href="routes.html" class="nav-item"><i data-lucide="route"></i> Routes</a>
+        <a href="students.html" class="nav-item"><i data-lucide="graduation-cap"></i> Students</a>
+        <a href="settings.html" class="nav-item"><i data-lucide="settings"></i> Settings</a>
+    </nav>
+    <a href="home.html" class="nav-item" style="margin-top: auto;">
+        <i data-lucide="arrow-left-circle"></i> Back to Home
+    </a>
+</div>
+</div>
+
+<main class="main">
+    <div class="top-bar">
+        <div>
+            <h1>Route Management</h1>
+            <p style="color: var(--text-muted); margin-top: 4px;">Manage and optimize school bus routes for <b>Mira Bhayandar</b>.</p>
+        </div>
+        <button class="btn-create" onclick="openCreateModal()"><i data-lucide="plus"></i> Create New Route</button>
+    </div>
+    <div class="route-grid" id="routeGrid"></div>
+</main>
+
+<div id="createModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add New Route</h2>
+            <span class="close-modal" onclick="closeCreateModal()">&times;</span>
+        </div>
+        <form id="createRouteForm" onsubmit="handleCreateRoute(event)">
+            <div class="form-group">
+                <label>Route Name (e.g. Station to School)</label>
+                <input type="text" id="newName" placeholder="Enter route path" required>
+            </div>
+            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <label>Total Stops</label>
+                    <input type="number" id="newStops" placeholder="8" required>
+                </div>
+                <div>
+                    <label>Total Students</label>
+                    <input type="number" id="newStudents" placeholder="40" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Assign Vehicle</label>
+                <select id="newBus" required>
+                    <option value="">Select a Bus</option>
+                    <option value="Bus 6">Bus 6 (Available)</option>
+                    <option value="Bus 7">Bus 7 (Available)</option>
+                    <option value="Bus 8">Bus 8 (Available)</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-create" style="width: 100%; margin-top: 20px; justify-content: center;">
+                Save & Deploy Route
+            </button>
+        </form>
+    </div>
+</div>
+
+<div id="detailsModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalRouteName">Route Details</h2>
+            <span class="close-modal" onclick="closeDetails()">&times;</span>
+        </div>
+        
+        <div class="detail-stats">
+            <div class="stat-box"><span id="modalStops">0</span><p>Stops</p></div>
+            <div class="stat-box"><span id="modalBus">Bus 0</span><p>Vehicle</p></div>
+            <div class="stat-box"><span id="modalStudents">0</span><p>Students</p></div>
+        </div>
+
+        <h3 style="margin-bottom: 20px; font-size: 16px; font-weight: 700;">Route Timeline</h3>
+        <div class="stops-timeline">
+            <div class="timeline-item"><div class="dot active"></div><p><b>Origin:</b> Mira Road Station Hub</p></div>
+            <div class="timeline-item"><div class="dot"></div><p><b>Stop A:</b> Silver Sarovar Complex</p></div>
+            <div class="timeline-item"><div class="dot"></div><p><b>Stop B:</b> Shanti Nagar Sector 4</p></div>
+            <div class="timeline-item"><div class="dot"></div><p><b>Destination:</b> RBK School Entrance</p></div>
+        </div>
+
+        <button class="btn-create" style="width: 100%; margin-top: 30px; justify-content: center;">
+            <i data-lucide="map"></i> Open Live Tracking
+        </button>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+
+    const routes = [
+        { name: "Mira Road → RBK School", stops: 8, bus: "Bus 1", students: 42, status: "Active" },
+        { name: "Bhayandar East → RBK School", stops: 6, bus: "Bus 2", students: 38, status: "Active" },
+        { name: "Kashimira → RBK School", stops: 7, bus: "Bus 3", students: 47, status: "Active" },
+        { name: "Golden Nest → RBK School", stops: 5, bus: "Bus 4", students: 29, status: "Active" },
+        { name: "Uttan → RBK School", stops: 9, bus: "Bus 5", students: 34, status: "Active" }
+    ];
+
+    const grid = document.getElementById("routeGrid");
+    
+    function renderRoutes() {
+        grid.innerHTML = "";
+        routes.forEach((route) => {
+            grid.innerHTML += `
+                <div class="route-card">
+                    <div class="route-header">
+                        <div class="route-icon"><i data-lucide="navigation"></i></div>
+                        <div class="status-badge"><div class="status-dot"></div> ${route.status}</div>
+                    </div>
+                    <div class="route-name">${route.name}</div>
+                    <div class="info-group">
+                        <div class="info-item"><span>Total Stops</span> <b>${route.stops}</b></div>
+                        <div class="info-item"><span>Assigned Vehicle</span> <b>${route.bus}</b></div>
+                        <div class="info-item"><span>Total Students</span> <b>${route.students}</b></div>
+                    </div>
+                    <button class="btn-view" onclick="openDetails('${route.name}', ${route.stops}, '${route.bus}', ${route.students})">
+                        View Details <i data-lucide="arrow-right" style="width: 16px;"></i>
+                    </button>
+                </div>
+            `;
+        });
+        lucide.createIcons();
+    }
+
+    renderRoutes();
+
+    // --- Create Modal Logic ---
+    function openCreateModal() {
+        document.getElementById("createModal").style.display = "flex";
+    }
+
+    function closeCreateModal() {
+        document.getElementById("createModal").style.display = "none";
+    }
+
+    function handleCreateRoute(event) {
+        event.preventDefault();
+        const name = document.getElementById("newName").value;
+        const stops = document.getElementById("newStops").value;
+        const students = document.getElementById("newStudents").value;
+        const bus = document.getElementById("newBus").value;
+
+        routes.unshift({ name, stops, bus, students, status: "Active" });
+        renderRoutes();
+        closeCreateModal();
+        document.getElementById("createRouteForm").reset();
+    }
+
+    // --- Details Modal Logic ---
+    function openDetails(name, stops, bus, students) {
+        document.getElementById("modalRouteName").innerText = name;
+        document.getElementById("modalStops").innerText = stops;
+        document.getElementById("modalBus").innerText = bus;
+        document.getElementById("modalStudents").innerText = students;
+        document.getElementById("detailsModal").style.display = "flex";
+    }
+
+    function closeDetails() {
+        document.getElementById("detailsModal").style.display = "none";
+    }
+
+    // Close on outside click
+    window.onclick = function(event) {
+        if (event.target.className === "modal-overlay") {
+            closeCreateModal();
+            closeDetails();
+        }
+    }
+    // Initialize Icons
+lucide.createIcons();
+
+// Active Page Highlighter Logic
+const currentPage = window.location.pathname.split("/").pop();
+
+const navMapping = {
+    "index.html": "nav-dashboard",
+    "fleet.html": "nav-fleet",
+    "bus-health.html": "nav-health",
+    "routes.html": "nav-routes",
+    "students.html": "nav-students",
+    "settings.html": "nav-settings"
+};
+
+if (navMapping[currentPage]) {
+    document.getElementById(navMapping[currentPage]).classList.add("active");
+}
+
+// Logout Logic
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

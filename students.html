@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Directory | Fleet Pro</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #eef2ff;
+            --bg-body: #f8fafc;
+            --sidebar-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            display: flex;
+            background: var(--bg-body);
+            min-height: 100vh;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            padding: 32px 20px;
+            border-right: 1px solid #e2e8f0;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 12px;
+            margin-bottom: 48px;
+        }
+
+        .logo-icon {
+            width: 35px;
+            height: 35px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            margin-bottom: 6px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item:hover { background: #f1f5f9; color: var(--primary); }
+        .nav-item.active { background: var(--primary-light); color: var(--primary); }
+
+        /* --- MAIN --- */
+        .main {
+            margin-left: 280px;
+            flex: 1;
+            padding: 48px 60px;
+        }
+
+        .top-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .header-info h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .search-container {
+            position: relative;
+            width: 320px;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            width: 18px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 14px 14px 48px;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.3s;
+            box-shadow: var(--card-shadow);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        /* --- GRID --- */
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        /* --- STUDENT CARD --- */
+        .student-card {
+            background: white;
+            padding: 24px;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid rgba(226, 232, 240, 0.7);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .student-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+        }
+
+        .avatar-container {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            border-radius: 24px;
+            background: #f1f5f9;
+            padding: 5px;
+            overflow: hidden;
+        }
+
+        .avatar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .student-name {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .student-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .student-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+.sidebar {
+    width: 280px;
+    background: #ffffff;
+    padding: 32px 20px;
+    border-right: 1px solid #e2e8f0;
+    position: fixed;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    margin-bottom: 48px;
+    text-decoration: none;
+}
+
+.logo-icon {
+    width: 35px; height: 35px;
+    background: #6366f1; /* Your Primary Indigo */
+    border-radius: 10px;
+    display: grid; place-items: center;
+    color: white;
+}
+
+.logo-text { font-size: 20px; font-weight: 800; color: #0f172a; }
+
+.nav-group { flex: 1; }
+
+.nav-item {
+    padding: 12px 16px;
+    margin-bottom: 6px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 600;
+    color: #64748b; /* Muted text */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.nav-item:hover, .nav-item.active {
+    background: #eef2ff; /* Light Indigo bg */
+    color: #6366f1;
+}
+
+.sidebar-footer {
+    border-top: 1px solid #f1f5f9;
+    padding-top: 20px;
+    margin-top: auto;
+}
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <div class="logo-container">
+        <div class="logo-icon"><i data-lucide="bus"></i></div>
+        <span class="logo-text">FLEETPRO</span>
+    </div>
+    
+    <nav class="nav-group">
+        <a href="index.html" class="nav-item" id="nav-dashboard">
+            <i data-lucide="layout-dashboard"></i> Dashboard
+        </a>
+        <a href="fleet.html" class="nav-item" id="nav-fleet">
+            <i data-lucide="map"></i> Live Fleet
+        </a>
+        <a href="bus-health.html" class="nav-item" id="nav-health">
+            <i data-lucide="heart-pulse"></i> Bus Health
+        </a>
+        <a href="routes.html" class="nav-item" id="nav-routes">
+            <i data-lucide="route"></i> Routes
+        </a>
+        <a href="students.html" class="nav-item" id="nav-students">
+            <i data-lucide="graduation-cap"></i> Students
+        </a>
+        <a href="settings.html" class="nav-item" id="nav-settings">
+            <i data-lucide="settings"></i> Settings
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <a href="home.html" class="nav-item back-home">
+            <i data-lucide="arrow-left-circle"></i> Back to Home
+        </a>
+        <div class="nav-item logout" onclick="logout()" style="color: #ef4444;">
+            <i data-lucide="log-out"></i> Logout
+        </div>
+    </div>
+</div>
+
+    <main class="main">
+        <div class="top-section">
+            <div class="header-info">
+                <h1>Students (190)</h1>
+                <p style="color: var(--text-muted);">Managing student data for <b>Mira Bhayandar</b> district.</p>
+            </div>
+            <div class="search-container">
+                <i data-lucide="search"></i>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search by name or area..." onkeyup="filterStudents()">
+            </div>
+        </div>
+
+        <div class="student-grid" id="studentGrid"></div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        const areas = ["Mira Road", "Bhayandar", "Kashimira", "Golden Nest", "Uttan"];
+        const classes = ["5th Grade", "6th Grade", "7th Grade", "8th Grade", "9th Grade", "10th Grade"];
+        
+        const grid = document.getElementById("studentGrid");
+        const studentData = [];
+
+        // Generate Data
+        for(let i = 1; i <= 190; i++) {
+            const student = {
+                id: i,
+                name: `Student ${i}`,
+                photo: `https://api.dicebear.com/7.x/adventurer/svg?seed=${i}`,
+                age: 10 + Math.floor(Math.random() * 6),
+                grade: classes[Math.floor(Math.random() * classes.length)],
+                area: areas[Math.floor(Math.random() * areas.length)]
+            };
+            studentData.push(student);
+        }
+
+        // Render Function
+        function renderStudents(data) {
+            grid.innerHTML = "";
+            data.forEach(s => {
+                grid.innerHTML += `
+                    <div class="student-card" data-name="${s.name}" data-area="${s.area}">
+                        <div class="avatar-container">
+                            <img src="${s.photo}" alt="Student">
+                        </div>
+                        <div class="student-name">${s.name}</div>
+                        <div class="student-meta">${s.grade} • Age ${s.age}</div>
+                        <div class="student-tag">${s.area}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // Filter Function
+        function filterStudents() {
+            const query = document.getElementById("searchInput").value.toLowerCase();
+            const filtered = studentData.filter(s => 
+                s.name.toLowerCase().includes(query) || 
+                s.area.toLowerCase().includes(query)
+            );
+            renderStudents(filtered);
+        }
+
+        // Initial Render
+        renderStudents(studentData);
+
+        function goDashboard(){ window.location.href="index.html"; }
+        function goFleet(){ window.location.href="fleet.html"; }
+        function goRoutes(){ window.location.href="routes.html"; }
+        function goStudents(){ window.location.href="students.html"; }
+        function goSettings(){ window.location.href="settings.html"; }
+        // Current page highlight karne ke liye logic
+const path = window.location.pathname.split("/").pop();
+if (path === "index.html") document.getElementById("nav-dashboard").classList.add("active");
+if (path === "fleet.html") document.getElementById("nav-fleet").classList.add("active");
+if (path === "routes.html") document.getElementById("nav-routes").classList.add("active");
+if (path === "students.html") document.getElementById("nav-students").classList.add("active");
+if (path === "settings.html") document.getElementById("nav-settings").classList.add("active");
+// Initialize Icons
+lucide.createIcons();
+
+// Active Page Highlighter Logic
+const currentPage = window.location.pathname.split("/").pop();
+
+const navMapping = {
+    "index.html": "nav-dashboard",
+    "fleet.html": "nav-fleet",
+    "bus-health.html": "nav-health",
+    "routes.html": "nav-routes",
+    "students.html": "nav-students",
+    "settings.html": "nav-settings"
+};
+
+if (navMapping[currentPage]) {
+    document.getElementById(navMapping[currentPage]).classList.add("active");
+}
+
+// Logout Logic
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+}
+    </script>
+</body>
+</html>
