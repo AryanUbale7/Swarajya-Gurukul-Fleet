@@ -218,15 +218,14 @@
     </style>
 </head>
 <body>
-
 <div class="sidebar">
-    <div class="logo-container">
-        <div class="logo-icon"><i data-lucide="bus"></i></div>
-        <span class="logo-text">FLEETPRO</span>
-    </div>
+    <a href="index.html" class="logo-container">
+        <img src="school-logo.png" alt="Swarajya Gurukul" style="width: 80px; height: 80px; object-fit: contain;">
+        <span class="logo-text" style="font-size: 16px; font-weight: 800; color: #b8860b;">SWARAJYA GURUKUL</span>
+    </a>
     
     <nav class="nav-group">
-        <a href="index.html" class="nav-item" id="nav-dashboard">
+        <a href="index.html" class="nav-item" id="nav-dash">
             <i data-lucide="layout-dashboard"></i> Dashboard
         </a>
         <a href="fleet.html" class="nav-item" id="nav-fleet">
@@ -241,16 +240,19 @@
         <a href="students.html" class="nav-item" id="nav-students">
             <i data-lucide="graduation-cap"></i> Students
         </a>
+        <a href="driver-admin.html" class="nav-item" id="nav-driver">
+            <i data-lucide="users"></i> Driver Monitor
+        </a>
+        <a href="manage-assignment.html" class="nav-item" id="nav-duty">
+            <i data-lucide="user-cog"></i> Duty Assignments
+        </a>
         <a href="settings.html" class="nav-item" id="nav-settings">
             <i data-lucide="settings"></i> Settings
         </a>
     </nav>
 
     <div class="sidebar-footer">
-        <a href="home.html" class="nav-item back-home">
-            <i data-lucide="arrow-left-circle"></i> Back to Home
-        </a>
-        <div class="nav-item logout" onclick="logout()" style="color: #ef4444;">
+        <div class="nav-item logout-btn" onclick="logout()">
             <i data-lucide="log-out"></i> Logout
         </div>
     </div>

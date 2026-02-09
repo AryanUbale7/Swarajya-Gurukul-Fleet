@@ -3,148 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login | Fleet Pro</title>
+    <title>Login | Swarajya Gurukul Fleet</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <style>
         :root {
             --primary: #6366f1;
-            --primary-dark: #4f46e5;
+            --dark: #0f172a;
+            --gold: #fbbf24;
             --bg: #f8fafc;
         }
 
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #eef2ff 0%, #f1f5f9 100%);
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        body { 
+            background: radial-gradient(circle at top right, #eef2ff, #f8fafc);
+            display: flex; align-items: center; justify-content: center; min-height: 100vh;
+            padding: 20px;
         }
 
         .login-card {
-            background: white;
-            padding: 48px;
-            border-radius: 32px;
-            width: 400px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255,255,255,0.7);
-            text-align: center;
+            background: white; width: 100%; max-width: 450px; padding: 50px 40px;
+            border-radius: 35px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(226, 232, 240, 0.8); text-align: center;
         }
 
-        .logo-box {
-            width: 60px; height: 60px;
-            background: var(--primary);
-            border-radius: 18px;
-            display: grid; place-items: center;
-            color: white; margin: 0 auto 24px;
+        /* School Logo */
+        .logo-box img { width: 100px; height: 100px; object-fit: contain; margin-bottom: 15px; }
+        .school-name { font-size: 20px; font-weight: 800; color: var(--dark); letter-spacing: 0.5px; margin-bottom: 5px; }
+        .sub-text { color: #64748b; font-size: 14px; margin-bottom: 35px; }
+
+        .input-group { text-align: left; margin-bottom: 20px; position: relative; }
+        .input-group label { display: block; font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 8px; margin-left: 5px; }
+        
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; width: 18px; }
+        
+        input, select {
+            width: 100%; padding: 14px 14px 14px 45px; border-radius: 16px;
+            border: 2px solid #f1f5f9; background: #f8fafc; font-size: 15px; font-weight: 600;
+            transition: 0.3s; outline: none; appearance: none;
         }
 
-        h2 { font-size: 24px; font-weight: 800; color: #1e293b; margin-bottom: 8px; }
-        p { color: #64748b; font-size: 14px; margin-bottom: 32px; }
+        input:focus, select:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
 
-        .input-group { position: relative; margin-bottom: 16px; text-align: left; }
-        .input-group i { position: absolute; left: 16px; top: 14px; color: #94a3b8; width: 18px; }
-
-        input {
-            width: 100%;
-            padding: 14px 16px 14px 48px;
-            border-radius: 14px;
-            border: 1px solid #e2e8f0;
-            background: #f8fafc;
-            font-size: 14px;
-            transition: 0.3s;
+        .login-btn {
+            width: 100%; padding: 16px; border-radius: 18px; border: none;
+            background: var(--dark); color: white; font-size: 16px; font-weight: 700;
+            cursor: pointer; transition: 0.3s; margin-top: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
 
-        input:focus {
-            outline: none; border-color: var(--primary);
-            background: white; box-shadow: 0 0 0 4px #eef2ff;
-        }
-
-        button {
-            width: 100%; padding: 14px;
-            border: none; background: var(--primary);
-            color: white; border-radius: 14px;
-            cursor: pointer; font-size: 16px; font-weight: 700;
-            margin-top: 10px; transition: 0.3s;
-        }
-
-        button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
-        }
-
-        .error {
-            color: #ef4444; font-size: 13px; font-weight: 600;
-            margin-top: 16px; min-height: 20px;
-        }
+        .login-btn:hover { background: #1e293b; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
 
 <div class="login-card">
-    <div class="logo-box"><i data-lucide="bus"></i></div>
-    <h2>Welcome Back</h2>
-    <p>Please enter your admin credentials</p>
-
-    <div class="input-group">
-        <i data-lucide="mail"></i>
-        <input id="email" type="email" placeholder="Email Address">
+    <div class="logo-box">
+        <img src="school-logo.png" alt="Swarajya Gurukul">
     </div>
+    <h1 class="school-name">SWARAJYA GURUKUL</h1>
+    <p class="sub-text">Fleet Management System Portal</p>
 
-    <div class="input-group">
-        <i data-lucide="lock"></i>
-        <input id="password" type="password" placeholder="Password">
-    </div>
+    <form onsubmit="handleLogin(event)">
+        <div class="input-group">
+            <label>Login As</label>
+            <div class="input-wrapper">
+                <i data-lucide="user-circle"></i>
+                <select id="role" required>
+                    <option value="" disabled selected>Select your role</option>
+                    <option value="admin">Administrator</option>
+                    <option value="driver">School Bus Driver</option>
+                    <option value="cleaner">Bus Attendant / Cleaner</option>
+                </select>
+            </div>
+        </div>
 
-    <button onclick="login()">Sign In</button>
-    <div class="error" id="error"></div>
+        <div class="input-group">
+            <label>Username / ID</label>
+            <div class="input-wrapper">
+                <i data-lucide="user"></i>
+                <input type="text" id="username" placeholder="Enter your ID" required>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+                <i data-lucide="lock"></i>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+        </div>
+
+        <button type="submit" class="login-btn">
+            Sign In <i data-lucide="arrow-right"></i>
+        </button>
+    </form>
 </div>
 
 <script>
     lucide.createIcons();
 
-    async function login() {
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-        const errorDiv = document.getElementById("error");
+    function handleLogin(e) {
+    e.preventDefault();
+    const role = document.getElementById('role').value;
+    const inputID = document.getElementById('username').value; // User jo ID dalega
 
-        try {
-            const res = await fetch("http://localhost:5000/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password })
-            });
+    if(role === 'admin') {
+        localStorage.setItem("token", "admin-logged-in");
+        window.location.href = "index.html"; 
+    } 
+    else if(role === 'driver') {
+        // 1. Drivers ki list (Database)
+        const driversList = [
+            { id: 1, name: "Ramesh Kumar", bus: "B-01", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ramesh" },
+            { id: 2, name: "Suresh Singh", bus: "B-02", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Suresh" },
+            { id: 3, name: "Abdul Khan", bus: "B-03", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Abdul" },
+            { id: 4, name: "Mahesh Patil", bus: "B-04", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mahesh" },
+            { id: 5, name: "Vikram Dada", bus: "B-05", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Vikram" }
+        ];
 
-            const data = await res.json();
+        // 2. Input ID ke hisaab se driver dhoondna
+        const foundDriver = driversList.find(d => d.id == inputID);
 
-            if (data.success) {
-                localStorage.setItem("token", data.token);
-                window.location.href = "index.html";
-            } else {
-                errorDiv.innerText = "Invalid email or password. Please try again.";
-            }
-        } catch (err) {
-            errorDiv.innerText = "Server is not responding. Check your connection.";
+        if (foundDriver) {
+            localStorage.setItem("currentDriver", JSON.stringify(foundDriver));
+            window.location.href = "driver-dashboard.html";
+        } else {
+            alert("Galat Driver ID! Please try 1 to 5.");
         }
+    } 
+    else if(role === 'cleaner') {
+        // Cleaner ke liye bhi same logic laga sakte hain
+        const mockCleaner = { id: inputID, name: "Helper " + inputID, bus: "B-0" + inputID };
+        localStorage.setItem("currentCleaner", JSON.stringify(mockCleaner));
+        window.location.href = "cleaner-dashboard.html";
     }
-    function logout() {
-    // Token ko delete karo
-    localStorage.removeItem("token");
-    // Wapas login page pe bhej do
-    window.location.href = "login.html";
 }
-// server.js ke andar
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "frontend", "login.html"));
-});
 </script>
-
 </body>
 </html>

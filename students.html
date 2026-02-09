@@ -18,254 +18,57 @@
             --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            display: flex;
-            background: var(--bg-body);
-            min-height: 100vh;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { display: flex; background: var(--bg-body); min-height: 100vh; }
 
         /* --- SIDEBAR --- */
-        .sidebar {
-            width: 280px;
-            background: var(--sidebar-bg);
-            padding: 32px 20px;
-            border-right: 1px solid #e2e8f0;
-            position: fixed;
-            height: 100vh;
-            z-index: 100;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 0 12px;
-            margin-bottom: 48px;
-        }
-
-        .logo-icon {
-            width: 35px;
-            height: 35px;
-            background: var(--primary);
-            border-radius: 10px;
-            display: grid;
-            place-items: center;
-            color: white;
-        }
-
-        .logo-text {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        .nav-item {
-            padding: 12px 16px;
-            margin-bottom: 6px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.2s;
-            font-weight: 600;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .nav-item:hover { background: #f1f5f9; color: var(--primary); }
-        .nav-item.active { background: var(--primary-light); color: var(--primary); }
+        .sidebar { width: 280px; background: var(--sidebar-bg); padding: 32px 20px; border-right: 1px solid #e2e8f0; position: fixed; height: 100vh; z-index: 1000; }
+        .logo-container { display: flex; align-items: center; gap: 12px; padding: 0 12px; margin-bottom: 48px; text-decoration: none; }
+        .logo-icon { width: 35px; height: 35px; background: var(--primary); border-radius: 10px; display: grid; place-items: center; color: white; }
+        .logo-text { font-size: 20px; font-weight: 800; color: #0f172a; }
+        .nav-group { flex: 1; }
+        .nav-item { padding: 12px 16px; margin-bottom: 6px; border-radius: 12px; cursor: pointer; transition: 0.3s; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .nav-item:hover, .nav-item.active { background: #eef2ff; color: var(--primary); }
+        .sidebar-footer { border-top: 1px solid #f1f5f9; padding-top: 20px; margin-top: auto; }
 
         /* --- MAIN --- */
-        .main {
-            margin-left: 280px;
-            flex: 1;
-            padding: 48px 60px;
-        }
+        .main { margin-left: 280px; flex: 1; padding: 48px 60px; }
+        .top-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .search-container { position: relative; width: 320px; }
+        .search-input { width: 100%; padding: 14px 14px 14px 48px; border-radius: 14px; border: 1px solid #e2e8f0; background: white; box-shadow: var(--card-shadow); }
+        .search-container i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
 
-        .top-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
+        /* --- STUDENT GRID --- */
+        .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; }
+        .student-card { background: white; padding: 24px; border-radius: 24px; text-align: center; border: 1px solid rgba(226, 232, 240, 0.7); box-shadow: var(--card-shadow); transition: 0.3s; cursor: pointer; }
+        .student-card:hover { transform: translateY(-8px); border-color: var(--primary); }
+        .avatar-container { width: 80px; height: 80px; margin: 0 auto 16px; border-radius: 24px; background: #f1f5f9; overflow: hidden; border: 2px solid var(--primary-light); }
+        .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
+        .student-name { font-weight: 700; font-size: 16px; color: var(--text-main); margin-bottom: 4px; }
+        .student-meta { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-bottom: 12px; }
+        .view-btn { font-size: 11px; font-weight: 700; color: var(--primary); background: var(--primary-light); padding: 6px 12px; border-radius: 8px; border: none; cursor: pointer; }
 
-        .header-info h1 {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--text-main);
-        }
-
-        .search-container {
-            position: relative;
-            width: 320px;
-        }
-
-        .search-container i {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            width: 18px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 14px 14px 14px 48px;
-            border-radius: 14px;
-            border: 1px solid #e2e8f0;
-            background: white;
-            font-size: 14px;
-            font-weight: 500;
-            transition: 0.3s;
-            box-shadow: var(--card-shadow);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px var(--primary-light);
-        }
-
-        /* --- GRID --- */
-        .student-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 24px;
-        }
-
-        /* --- STUDENT CARD --- */
-        .student-card {
-            background: white;
-            padding: 24px;
-            border-radius: 24px;
-            text-align: center;
-            border: 1px solid rgba(226, 232, 240, 0.7);
-            box-shadow: var(--card-shadow);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .student-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--primary);
-        }
-
-        .avatar-container {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 16px;
-            border-radius: 24px;
-            background: #f1f5f9;
-            padding: 5px;
-            overflow: hidden;
-        }
-
-        .avatar-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .student-name {
-            font-weight: 700;
-            font-size: 16px;
-            color: var(--text-main);
-            margin-bottom: 4px;
-        }
-
-        .student-meta {
-            font-size: 12px;
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-        }
-
-        .student-tag {
-            display: inline-block;
-            padding: 4px 12px;
-            background: var(--primary-light);
-            color: var(--primary);
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-.sidebar {
-    width: 280px;
-    background: #ffffff;
-    padding: 32px 20px;
-    border-right: 1px solid #e2e8f0;
-    position: fixed;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    z-index: 1000;
-}
-
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0 12px;
-    margin-bottom: 48px;
-    text-decoration: none;
-}
-
-.logo-icon {
-    width: 35px; height: 35px;
-    background: #6366f1; /* Your Primary Indigo */
-    border-radius: 10px;
-    display: grid; place-items: center;
-    color: white;
-}
-
-.logo-text { font-size: 20px; font-weight: 800; color: #0f172a; }
-
-.nav-group { flex: 1; }
-
-.nav-item {
-    padding: 12px 16px;
-    margin-bottom: 6px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.3s;
-    font-weight: 600;
-    color: #64748b; /* Muted text */
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-}
-
-.nav-item:hover, .nav-item.active {
-    background: #eef2ff; /* Light Indigo bg */
-    color: #6366f1;
-}
-
-.sidebar-footer {
-    border-top: 1px solid #f1f5f9;
-    padding-top: 20px;
-    margin-top: auto;
-}
+        /* --- MODAL --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background: white; width: 500px; padding: 32px; border-radius: 32px; position: relative; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .close-modal { position: absolute; top: 20px; right: 20px; cursor: pointer; color: var(--text-muted); }
+        .modal-header { text-align: center; margin-bottom: 24px; }
+        .modal-header img { width: 100px; height: 100px; border-radius: 30px; margin-bottom: 12px; background: #f1f5f9; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
+        .info-item label { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px; }
+        .info-item p { font-size: 14px; font-weight: 600; color: var(--text-main); }
     </style>
 </head>
 <body>
-<div class="sidebar">
-    <div class="logo-container">
-        <div class="logo-icon"><i data-lucide="bus"></i></div>
-        <span class="logo-text">FLEETPRO</span>
-    </div>
+    <div class="sidebar">
+    <a href="index.html" class="logo-container">
+        <img src="school-logo.png" alt="Swarajya Gurukul" style="width: 80px; height: 80px; object-fit: contain;">
+        <span class="logo-text" style="font-size: 16px; font-weight: 800; color: #b8860b;">SWARAJYA GURUKUL</span>
+    </a>
     
     <nav class="nav-group">
-        <a href="index.html" class="nav-item" id="nav-dashboard">
+        <a href="index.html" class="nav-item" id="nav-dash">
             <i data-lucide="layout-dashboard"></i> Dashboard
         </a>
         <a href="fleet.html" class="nav-item" id="nav-fleet">
@@ -280,16 +83,19 @@
         <a href="students.html" class="nav-item" id="nav-students">
             <i data-lucide="graduation-cap"></i> Students
         </a>
+        <a href="driver-admin.html" class="nav-item" id="nav-driver">
+            <i data-lucide="users"></i> Driver Monitor
+        </a>
+        <a href="manage-assignment.html" class="nav-item" id="nav-duty">
+            <i data-lucide="user-cog"></i> Duty Assignments
+        </a>
         <a href="settings.html" class="nav-item" id="nav-settings">
             <i data-lucide="settings"></i> Settings
         </a>
     </nav>
 
     <div class="sidebar-footer">
-        <a href="home.html" class="nav-item back-home">
-            <i data-lucide="arrow-left-circle"></i> Back to Home
-        </a>
-        <div class="nav-item logout" onclick="logout()" style="color: #ef4444;">
+        <div class="nav-item logout-btn" onclick="logout()">
             <i data-lucide="log-out"></i> Logout
         </div>
     </div>
@@ -298,106 +104,113 @@
     <main class="main">
         <div class="top-section">
             <div class="header-info">
-                <h1>Students (190)</h1>
-                <p style="color: var(--text-muted);">Managing student data for <b>Mira Bhayandar</b> district.</p>
+                <h1>Student Directory</h1>
+                <p style="color: var(--text-muted);">Active student base for Mira Bhayandar Municipality.</p>
             </div>
             <div class="search-container">
                 <i data-lucide="search"></i>
-                <input type="text" class="search-input" id="searchInput" placeholder="Search by name or area..." onkeyup="filterStudents()">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search name or roll no..." onkeyup="filterStudents()">
             </div>
         </div>
-
         <div class="student-grid" id="studentGrid"></div>
     </main>
 
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <i data-lucide="x" class="close-modal" onclick="closeModal()"></i>
+            <div class="modal-header">
+                <img id="modalImg" src="" alt="Student">
+                <h2 id="modalName">Name</h2>
+                <p id="modalID" style="color: var(--primary); font-weight: 700; font-size: 13px;"></p>
+            </div>
+            <div class="info-grid">
+                <div class="info-item"><label>Grade & Div</label><p id="modalGrade">10th - A</p></div>
+                <div class="info-item"><label>Blood Group</label><p id="modalBlood">O+</p></div>
+                <div class="info-item"><label>Father's Name</label><p id="modalFather">Father Name</p></div>
+                <div class="info-item"><label>Mother's Name</label><p id="modalMother">Mother Name</p></div>
+                <div class="info-item"><label>Contact</label><p id="modalContact">+91 98765 43210</p></div>
+                <div class="info-item"><label>Assigned Bus</label><p id="modalBus">B-01 (Mira Road)</p></div>
+                <div class="info-item" style="grid-column: span 2;"><label>Residential Address</label><p id="modalAddress">Address Details</p></div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        lucide.createIcons();
+        const firstNames = ["Aarav", "Vihaan", "Aditya", "Sai", "Arjun", "Anaya", "Diya", "Ira", "Saanvi", "Riya", "Kabir", "Ishaan", "Zoya", "Myra", "Aaryan"];
+        const lastNames = ["Sharma", "Patel", "Verma", "Mehta", "Khan", "Joshi", "Deshmukh", "Chauhan", "Gupta", "Malhotra"];
+        const areas = ["Mira Road East", "Bhayandar West", "Kashimira", "Golden Nest", "Uttan Road", "Shanti Nagar"];
+        const bloodGroups = ["A+", "B+", "O+", "AB+", "O-"];
 
-        const areas = ["Mira Road", "Bhayandar", "Kashimira", "Golden Nest", "Uttan"];
-        const classes = ["5th Grade", "6th Grade", "7th Grade", "8th Grade", "9th Grade", "10th Grade"];
-        
-        const grid = document.getElementById("studentGrid");
         const studentData = [];
-
-        // Generate Data
         for(let i = 1; i <= 190; i++) {
-            const student = {
-                id: i,
-                name: `Student ${i}`,
-                photo: `https://api.dicebear.com/7.x/adventurer/svg?seed=${i}`,
-                age: 10 + Math.floor(Math.random() * 6),
-                grade: classes[Math.floor(Math.random() * classes.length)],
-                area: areas[Math.floor(Math.random() * areas.length)]
-            };
-            studentData.push(student);
-        }
-
-        // Render Function
-        function renderStudents(data) {
-            grid.innerHTML = "";
-            data.forEach(s => {
-                grid.innerHTML += `
-                    <div class="student-card" data-name="${s.name}" data-area="${s.area}">
-                        <div class="avatar-container">
-                            <img src="${s.photo}" alt="Student">
-                        </div>
-                        <div class="student-name">${s.name}</div>
-                        <div class="student-meta">${s.grade} • Age ${s.age}</div>
-                        <div class="student-tag">${s.area}</div>
-                    </div>
-                `;
+            const fName = firstNames[Math.floor(Math.random() * firstNames.length)];
+            const lName = lastNames[Math.floor(Math.random() * lastNames.length)];
+            const area = areas[Math.floor(Math.random() * areas.length)];
+            
+            studentData.push({
+                id: `STD-2026-${1000 + i}`,
+                name: `${fName} ${lName}`,
+                photo: `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${i}&backgroundColor=b6e3f4`,
+                age: 8 + Math.floor(Math.random() * 8),
+                grade: `${5 + Math.floor(Math.random() * 6)}th`,
+                division: ["A", "B", "C"][Math.floor(Math.random() * 3)],
+                area: area,
+                father: `${lName} ${firstNames[Math.floor(Math.random() * 5)]}`,
+                mother: `Mrs. ${lastNames[Math.floor(Math.random() * 5)]}`,
+                contact: `+91 9${Math.floor(Math.random() * 899999999 + 100000000)}`,
+                address: `Flat ${Math.floor(Math.random() * 1000)}, Building ${i}, ${area}, Mira Bhayandar`,
+                blood: bloodGroups[Math.floor(Math.random() * bloodGroups.length)],
+                bus: `B-0${Math.floor(Math.random() * 5) + 1}`
             });
         }
 
-        // Filter Function
+        function renderStudents(data) {
+            const grid = document.getElementById("studentGrid");
+            grid.innerHTML = data.map(s => `
+                <div class="student-card" onclick="openModal('${s.id}')">
+                    <div class="avatar-container"><img src="${s.photo}"></div>
+                    <div class="student-name">${s.name}</div>
+                    <div class="student-meta">${s.grade} • Div ${s.division}</div>
+                    <div class="student-tag">${s.area}</div>
+                    <div style="margin-top:10px"><button class="view-btn">See Details</button></div>
+                </div>
+            `).join('');
+        }
+
+        function openModal(id) {
+            const s = studentData.find(st => st.id === id);
+            document.getElementById('modalImg').src = s.photo;
+            document.getElementById('modalName').innerText = s.name;
+            document.getElementById('modalID').innerText = s.id;
+            document.getElementById('modalGrade').innerText = `${s.grade} - Division ${s.division}`;
+            document.getElementById('modalFather').innerText = `Mr. ${s.father}`;
+            document.getElementById('modalMother').innerText = s.mother;
+            document.getElementById('modalContact').innerText = s.contact;
+            document.getElementById('modalAddress').innerText = s.address;
+            document.getElementById('modalBlood').innerText = s.blood;
+            document.getElementById('modalBus').innerText = s.bus;
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('modalOverlay').style.display = 'none'; }
+        window.onclick = (e) => { if(e.target == document.getElementById('modalOverlay')) closeModal(); }
+
         function filterStudents() {
-            const query = document.getElementById("searchInput").value.toLowerCase();
-            const filtered = studentData.filter(s => 
-                s.name.toLowerCase().includes(query) || 
-                s.area.toLowerCase().includes(query)
-            );
+            const q = document.getElementById("searchInput").value.toLowerCase();
+            const filtered = studentData.filter(s => s.name.toLowerCase().includes(q) || s.area.toLowerCase().includes(q));
             renderStudents(filtered);
         }
 
-        // Initial Render
+        function logout() { localStorage.removeItem("token"); window.location.href = "login.html"; }
+
+        // Initialize
         renderStudents(studentData);
-
-        function goDashboard(){ window.location.href="index.html"; }
-        function goFleet(){ window.location.href="fleet.html"; }
-        function goRoutes(){ window.location.href="routes.html"; }
-        function goStudents(){ window.location.href="students.html"; }
-        function goSettings(){ window.location.href="settings.html"; }
-        // Current page highlight karne ke liye logic
-const path = window.location.pathname.split("/").pop();
-if (path === "index.html") document.getElementById("nav-dashboard").classList.add("active");
-if (path === "fleet.html") document.getElementById("nav-fleet").classList.add("active");
-if (path === "routes.html") document.getElementById("nav-routes").classList.add("active");
-if (path === "students.html") document.getElementById("nav-students").classList.add("active");
-if (path === "settings.html") document.getElementById("nav-settings").classList.add("active");
-// Initialize Icons
-lucide.createIcons();
-
-// Active Page Highlighter Logic
-const currentPage = window.location.pathname.split("/").pop();
-
-const navMapping = {
-    "index.html": "nav-dashboard",
-    "fleet.html": "nav-fleet",
-    "bus-health.html": "nav-health",
-    "routes.html": "nav-routes",
-    "students.html": "nav-students",
-    "settings.html": "nav-settings"
-};
-
-if (navMapping[currentPage]) {
-    document.getElementById(navMapping[currentPage]).classList.add("active");
-}
-
-// Logout Logic
-function logout() {
-    localStorage.removeItem("token");
-    window.location.href = "login.html";
-}
+        lucide.createIcons();
+        
+        // Active Tab Logic
+        const path = window.location.pathname.split("/").pop() || "index.html";
+        const navMap = {"index.html":"nav-dashboard", "fleet.html":"nav-fleet", "bus-health.html":"nav-health", "routes.html":"nav-routes", "students.html":"nav-students", "settings.html":"nav-settings"};
+        if(navMap[path]) document.getElementById(navMap[path]).classList.add("active");
     </script>
 </body>
 </html>

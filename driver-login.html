@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Login | Fleet Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-card {
+            background: white;
+            padding: 45px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        /* --- ROLE SELECTOR --- */
+        .role-selector {
+            display: flex;
+            background: #f1f5f9;
+            padding: 6px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            color: #64748b;
+            background: transparent;
+            transition: 0.3s;
+            z-index: 1;
+        }
+
+        .role-btn.active {
+            color: var(--primary);
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            color: #475569;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #f1f5f9;
+            border-radius: 14px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #f8faff;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        #errorMsg {
+            color: #ef4444;
+            font-size: 13px;
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h2 style="font-weight: 800; color: #1e293b; margin-bottom: 10px;">Staff Access</h2>
+        <p style="color: #64748b; font-size: 14px; margin-bottom: 30px;">Select your role and enter credentials</p>
+
+        <div class="role-selector">
+            <button class="role-btn active" id="btnDriver" onclick="setRole('driver')">Driver</button>
+            <button class="role-btn" id="btnCleaner" onclick="setRole('cleaner')">Cleaner</button>
+        </div>
+
+        <div class="input-group">
+            <label id="idLabel">Driver ID</label>
+            <input type="number" id="staffId" placeholder="Enter your ID (1-5)">
+        </div>
+
+        <div class="input-group">
+            <label>Access Password</label>
+            <input type="password" id="staffPass" placeholder="••••••••">
+        </div>
+
+        <p id="errorMsg">❌ Invalid ID or Password!</p>
+
+        <button class="login-btn" onclick="processLogin()">Login to System</button>
+    </div>
+
+    <script>
+        let selectedRole = 'driver';
+
+        // Mock Databases
+        const drivers = [
+            { id: 1, name: "Ramesh Kumar", bus: "B-01", photo: "https://i.pravatar.cc/150?u=1", role: "driver" },
+            { id: 2, name: "Suresh Singh", bus: "B-02", photo: "https://i.pravatar.cc/150?u=2", role: "driver" },
+            { id: 3, name: "Abdul Khan", bus: "B-03", photo: "https://i.pravatar.cc/150?u=3", role: "driver" },
+            { id: 4, name: "Mahesh Patil", bus: "B-04", photo: "https://i.pravatar.cc/150?u=4", role: "driver" },
+            { id: 5, name: "Vikram Dada", bus: "B-05", photo: "https://i.pravatar.cc/150?u=5", role: "driver" }
+        ];
+
+        const cleaners = [
+            { id: 1, name: "Raju Helper", bus: "B-01", role: "cleaner" },
+            { id: 2, name: "Chotu Singh", bus: "B-02", role: "cleaner" },
+            { id: 3, name: "Suresh Mani", bus: "B-03", role: "cleaner" },
+            { id: 4, name: "Vicky Dash", bus: "B-04", role: "cleaner" },
+            { id: 5, name: "Babu Cleaner", bus: "B-05", role: "cleaner" }
+        ];
+
+        function setRole(role) {
+            selectedRole = role;
+            document.getElementById('idLabel').innerText = role.charAt(0).toUpperCase() + role.slice(1) + " ID";
+            
+            // Toggle Button Classes
+            document.getElementById('btnDriver').classList.toggle('active', role === 'driver');
+            document.getElementById('btnCleaner').classList.toggle('active', role === 'cleaner');
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+
+        function processLogin() {
+            const idVal = document.getElementById('staffId').value;
+            const passVal = document.getElementById('staffPass').value;
+            const errorBox = document.getElementById('errorMsg');
+
+            // Basic Password Check (Default: 123)
+            if (passVal !== "123") {
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            let foundUser = null;
+            if (selectedRole === 'driver') {
+                foundUser = drivers.find(d => d.id == idVal);
+            } else {
+                foundUser = cleaners.find(c => c.id == idVal);
+            }
+
+            if (foundUser) {
+                // Save session based on role
+                if (selectedRole === 'driver') {
+                    localStorage.setItem("currentDriver", JSON.stringify(foundUser));
+                    window.location.href = "driver-dashboard.html";
+                } else {
+                    localStorage.setItem("currentCleaner", JSON.stringify(foundUser));
+                    window.location.href = "cleaner-dashboard.html";
+                }
+            } else {
+                errorBox.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip History | Swarajya Gurukul</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --sidebar-bg: #0f172a;
+            --bg: #f8fafc;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; display: flex; background-color: var(--bg); color: #1e293b; }
+
+        /* --- SIDEBAR UPDATED WITH SCHOOL LOGO --- */
+        .sidebar { 
+            width: 280px; background: var(--sidebar-bg); color: white; padding: 35px 24px; 
+            position: fixed; height: 100vh; display: flex; flex-direction: column; align-items: center;
+        }
+        
+        /* Swarajya Gurukul Logo Styling */
+        .school-logo { 
+            width: 90px; 
+            height: 90px; 
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
+        .logo-text { 
+            font-size: 18px; 
+            font-weight: 800; 
+            color: #fbbf24; 
+            letter-spacing: 0.5px;
+            margin-bottom: 40px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .nav-group { width: 100%; flex: 1; }
+        .nav-item { padding: 14px 18px; border-radius: 14px; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; gap: 14px; color: #94a3b8; text-decoration: none; font-weight: 500; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.05); color: white; }
+        .nav-item.active { background: var(--primary); box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3); }
+
+        /* --- MAIN CONTENT --- */
+        .main { margin-left: 280px; width: calc(100% - 280px); padding: 50px 60px; }
+        
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px; }
+        .stat-card { background: white; padding: 25px; border-radius: 24px; box-shadow: var(--card-shadow); border: 1px solid #f1f5f9; display: flex; align-items: center; gap: 20px; }
+        .icon-box { width: 55px; height: 55px; border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+        .stat-info h3 { margin: 0; font-size: 28px; font-weight: 800; }
+        .stat-info p { margin: 5px 0 0; color: #64748b; font-size: 14px; font-weight: 600; }
+
+        .card { background: white; padding: 35px; border-radius: 28px; box-shadow: var(--card-shadow); border: 1px solid #f1f5f9; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        
+        table { width: 100%; border-collapse: separate; border-spacing: 0 12px; }
+        th { text-align: left; padding: 0 20px; color: #94a3b8; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 20px; background: #fcfdfe; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; }
+        td:first-child { border-left: 1px solid #f1f5f9; border-radius: 16px 0 0 16px; font-weight: 700; color: var(--primary); }
+        td:last-child { border-right: 1px solid #f1f5f9; border-radius: 0 16px 16px 0; }
+
+        .status-badge { padding: 8px 16px; border-radius: 12px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+        .completed { background: #ecfdf5; color: #059669; }
+        .completed::before { content: ''; width: 6px; height: 6px; background: #059669; border-radius: 50%; }
+
+        .route-pill { background: #f1f5f9; padding: 6px 12px; border-radius: 8px; font-size: 13px; color: #475569; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <img src="school-logo.png" alt="Swarajya Gurukul" class="school-logo">
+    <div class="logo-text">SWARAJYA GURUKUL</div>
+    
+    <div class="nav-group">
+        <a href="driver-dashboard.html" class="nav-item active"><i data-lucide="layout-dashboard"></i> My Dashboard</a>
+        <a href="trip-history.html" class="nav-item"><i data-lucide="map-pin"></i> Trip History</a>
+        <a href="profile-settings.html" class="nav-item"><i data-lucide="user-cog"></i> Profile Settings</a>
+    </div>
+    
+    <div class="nav-item" onclick="logout()" style="margin-top: auto; color: #f43f5e; width: 100%;"><i data-lucide="log-out"></i> Logout</div>
+</div>
+<div class="main">
+    <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 10px;">Trip Analytics</h1>
+    <p style="color: #64748b; margin-bottom: 40px;">Detailed records for Swarajya Gurukul bus fleet.</p>
+
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="icon-box" style="background: #eef2ff; color: #6366f1;"><i data-lucide="trending-up"></i></div>
+            <div class="stat-info"><h3>124</h3><p>Total Trips</p></div>
+        </div>
+        <div class="stat-card">
+            <div class="icon-box" style="background: #f0fdf4; color: #22c55e;"><i data-lucide="users"></i></div>
+            <div class="stat-info"><h3>5.2k</h3><p>Students Picked</p></div>
+        </div>
+        <div class="stat-card">
+            <div class="icon-box" style="background: #fff7ed; color: #f59e0b;"><i data-lucide="star"></i></div>
+            <div class="stat-info"><h3>4.9</h3><p>Avg Rating</p></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 style="margin: 0; font-size: 20px; font-weight: 800;">Detailed Trip Logs</h2>
+            <button style="padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="download" style="width: 18px;"></i> Export CSV
+            </button>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Trip ID</th>
+                    <th>Date & Time</th>
+                    <th>Route Detail</th>
+                    <th>Students</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>#TRP-9021</td>
+                    <td>09 Feb 2026, 07:30 AM</td>
+                    <td><span class="route-pill">Mira Road Sector 10</span></td>
+                    <td style="font-weight: 700;">42</td>
+                    <td><span class="status-badge completed">Completed</span></td>
+                </tr>
+                <tr>
+                    <td>#TRP-9018</td>
+                    <td>08 Feb 2026, 04:15 PM</td>
+                    <td><span class="route-pill">Bhayandar East (Golden Nest)</span></td>
+                    <td style="font-weight: 700;">35</td>
+                    <td><span class="status-badge completed">Completed</span></td>
+                </tr>
+                <tr>
+                    <td>#TRP-8995</td>
+                    <td>07 Feb 2026, 07:30 AM</td>
+                    <td><span class="route-pill">Kashimira Highway Loop</span></td>
+                    <td style="font-weight: 700;">47</td>
+                    <td><span class="status-badge completed">Completed</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
+</body>
+</html>

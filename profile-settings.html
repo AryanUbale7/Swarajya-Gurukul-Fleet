@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings | Swarajya Gurukul</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --sidebar-bg: #0f172a;
+            --bg: #f8fafc;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; display: flex; background-color: var(--bg); color: #1e293b; }
+
+        /* --- SIDEBAR UPDATED WITH BIG LOGO --- */
+        .sidebar { 
+            width: 280px; background: var(--sidebar-bg); color: white; padding: 35px 24px; 
+            position: fixed; height: 100vh; display: flex; flex-direction: column; align-items: center;
+        }
+        
+        /* Swarajya Gurukul Logo */
+        .school-logo { 
+            width: 90px; 
+            height: 90px; 
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
+        .logo-text { 
+            font-size: 18px; 
+            font-weight: 800; 
+            color: #fbbf24; 
+            letter-spacing: 0.5px;
+            margin-bottom: 40px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .nav-group { width: 100%; flex: 1; }
+        .nav-item { padding: 14px 18px; border-radius: 14px; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; gap: 14px; color: #94a3b8; text-decoration: none; font-weight: 500; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.05); color: white; }
+        .nav-item.active { background: var(--primary); box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3); }
+
+        /* --- MAIN CONTENT --- */
+        .main { margin-left: 280px; width: calc(100% - 280px); padding: 50px 60px; }
+        
+        .profile-wrapper { max-width: 800px; margin: 0 auto; }
+        .card { background: white; border-radius: 30px; box-shadow: var(--card-shadow); border: 1px solid #f1f5f9; overflow: hidden; }
+        
+        /* Gold and Blue Gradient for Header */
+        .profile-header { background: linear-gradient(135deg, #0f172a, #1e293b); padding: 60px 40px; text-align: center; color: white; position: relative; border-bottom: 4px solid #fbbf24; }
+        .avatar-container { position: relative; display: inline-block; }
+        .avatar-container img { width: 130px; height: 130px; border-radius: 35px; border: 5px solid white; object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .edit-badge { position: absolute; bottom: -10px; right: -10px; background: white; color: var(--primary); padding: 8px; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: none; }
+
+        .profile-body { padding: 40px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .input-group label { font-size: 13px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-group input { 
+            padding: 14px 18px; border-radius: 14px; border: 1.5px solid #e2e8f0; font-size: 15px; font-weight: 600; 
+            transition: 0.3s; background: #f8fafc; 
+        }
+        .input-group input:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+        .input-group input:disabled { background: #f1f5f9; color: #94a3b8; cursor: not-allowed; }
+
+        .save-btn { 
+            margin-top: 40px; background: var(--primary); color: white; border: none; padding: 16px 40px; 
+            border-radius: 16px; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s; 
+            display: flex; align-items: center; gap: 10px; justify-content: center; width: 100%;
+        }
+        .save-btn:hover { background: #4f46e5; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2); }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <img src="school-logo.png" alt="Swarajya Gurukul" class="school-logo">
+    <div class="logo-text">Swarajya Gurukul</div>
+    
+    <div class="nav-group">
+        <a href="driver-dashboard.html" class="nav-item"><i data-lucide="layout-dashboard"></i> My Dashboard</a>
+        <a href="trip-history.html" class="nav-item"><i data-lucide="map-pin"></i> Trip History</a>
+        <a href="profile-settings.html" class="nav-item active"><i data-lucide="user-cog"></i> Profile Settings</a>
+    </div>
+</div>
+
+<div class="main">
+    <div class="profile-wrapper">
+        <h1 style="font-size: 32px; font-weight: 800; margin-bottom: 30px;">Account Settings</h1>
+        
+        <div class="card">
+            <div class="profile-header">
+                <div class="avatar-container">
+                    <img id="dPhoto" src="" alt="Driver">
+                    <button class="edit-badge"><i data-lucide="camera" style="width: 18px;"></i></button>
+                </div>
+                <h2 id="dNameLabel" style="margin: 15px 0 5px; font-size: 24px; font-weight: 800;">Driver Name</h2>
+                <p style="margin: 0; opacity: 0.9; font-weight: 500;">Swarajya Gurukul Fleet Staff</p>
+            </div>
+
+            <div class="profile-body">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" id="editName" placeholder="Enter your name">
+                    </div>
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <input type="text" id="editPhone" placeholder="Enter phone number">
+                    </div>
+                    <div class="input-group">
+                        <label>License Number</label>
+                        <input type="text" value="MH-04-2023-0012345" disabled>
+                    </div>
+                    <div class="input-group">
+                        <label>Assigned Bus ID</label>
+                        <input type="text" id="editBus" disabled>
+                    </div>
+                    <div class="input-group" style="grid-column: span 2;">
+                        <label>Email Address</label>
+                        <input type="email" value="driver.pro@fleetpro.com" disabled>
+                    </div>
+                </div>
+
+                <button class="save-btn" onclick="saveProfile()">
+                    <i data-lucide="save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+
+    const driver = JSON.parse(localStorage.getItem("currentDriver"));
+    if (driver) {
+        document.getElementById('dNameLabel').innerText = driver.name;
+        document.getElementById('editName').value = driver.name;
+        document.getElementById('editPhone').value = driver.phone || "9876543210";
+        document.getElementById('editBus').value = driver.bus;
+        document.getElementById('dPhoto').src = driver.photo;
+    }
+
+    function saveProfile() {
+        let driverData = JSON.parse(localStorage.getItem("currentDriver"));
+        driverData.name = document.getElementById('editName').value;
+        driverData.phone = document.getElementById('editPhone').value;
+
+        localStorage.setItem("currentDriver", JSON.stringify(driverData));
+        
+        const btn = document.querySelector('.save-btn');
+        btn.innerHTML = '<i data-lucide="check"></i> Changes Saved!';
+        lucide.createIcons();
+        
+        setTimeout(() => {
+            btn.innerHTML = '<i data-lucide="save"></i> Save Changes';
+            lucide.createIcons();
+            location.reload();
+        }, 2000);
+    }
+</script>
+</body>
+</html>

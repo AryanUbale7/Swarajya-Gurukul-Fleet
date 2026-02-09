@@ -58,20 +58,44 @@
     </style>
 </head>
 <body>
-
 <div class="sidebar">
-    <div class="logo-container">
-        <div class="logo-icon"><i data-lucide="bus"></i></div>
-        <span class="logo-text">FLEETPRO</span>
-    </div>
+    <a href="index.html" class="logo-container">
+        <img src="school-logo.png" alt="Swarajya Gurukul" style="width: 80px; height: 80px; object-fit: contain;">
+        <span class="logo-text" style="font-size: 16px; font-weight: 800; color: #b8860b;">SWARAJYA GURUKUL</span>
+    </a>
+    
     <nav class="nav-group">
-        <a href="index.html" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-        <a href="fleet.html" class="nav-item"><i data-lucide="map"></i> Live Fleet</a>
-        <a href="bus-health.html" class="nav-item active"><i data-lucide="heart-pulse"></i> Bus Health</a>
-        <a href="routes.html" class="nav-item"><i data-lucide="route"></i> Routes</a>
-        <a href="students.html" class="nav-item"><i data-lucide="graduation-cap"></i> Students</a>
+        <a href="index.html" class="nav-item" id="nav-dash">
+            <i data-lucide="layout-dashboard"></i> Dashboard
+        </a>
+        <a href="fleet.html" class="nav-item" id="nav-fleet">
+            <i data-lucide="map"></i> Live Fleet
+        </a>
+        <a href="bus-health.html" class="nav-item" id="nav-health">
+            <i data-lucide="heart-pulse"></i> Bus Health
+        </a>
+        <a href="routes.html" class="nav-item" id="nav-routes">
+            <i data-lucide="route"></i> Routes
+        </a>
+        <a href="students.html" class="nav-item" id="nav-students">
+            <i data-lucide="graduation-cap"></i> Students
+        </a>
+        <a href="driver-admin.html" class="nav-item" id="nav-driver">
+            <i data-lucide="users"></i> Driver Monitor
+        </a>
+        <a href="manage-assignment.html" class="nav-item" id="nav-duty">
+            <i data-lucide="user-cog"></i> Duty Assignments
+        </a>
+        <a href="settings.html" class="nav-item" id="nav-settings">
+            <i data-lucide="settings"></i> Settings
+        </a>
     </nav>
-    <a href="home.html" class="nav-item" style="margin-top: auto;"><i data-lucide="arrow-left-circle"></i> Back to Home</a>
+
+    <div class="sidebar-footer">
+        <div class="nav-item logout-btn" onclick="logout()">
+            <i data-lucide="log-out"></i> Logout
+        </div>
+    </div>
 </div>
 
 <main class="main">
