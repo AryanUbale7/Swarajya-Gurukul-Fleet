@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fleet Live Tracking | Fleet Pro</title>
+    <title>Swarajya Gurukul | Live Fleet</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -11,260 +11,68 @@
 
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-light: #eef2ff;
-            --bg-body: #f1f5f9;
-            --sidebar-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --primary: #6366f1; --primary-light: #eef2ff; --bg-body: #f1f5f9;
+            --sidebar-bg: #ffffff; --text-main: #0f172a; --text-muted: #64748b;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            display: flex;
-            background: var(--bg-body);
-            height: 100vh;
-            overflow: hidden;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { display: flex; background: var(--bg-body); height: 100vh; overflow: hidden; }
 
         /* --- SIDEBAR --- */
-        .sidebar {
-            width: 280px;
-            background: var(--sidebar-bg);
-            padding: 32px 20px;
-            border-right: 1px solid #e2e8f0;
-            position: fixed;
-            height: 100vh;
-            z-index: 1000;
-        }
+        .sidebar { width: 280px; background: var(--sidebar-bg); padding: 32px 20px; border-right: 1px solid #e2e8f0; position: fixed; height: 100vh; display: flex; flex-direction: column; z-index: 1000; }
+        .logo-container { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 40px; text-decoration: none; color: inherit; text-align: center; }
+        .school-logo { width: 80px; height: 80px; object-fit: contain; }
+        .logo-text { font-size: 16px; font-weight: 800; color: #b8860b; letter-spacing: 0.5px; }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 0 12px;
-            margin-bottom: 48px;
-        }
-
-        .logo-icon {
-            width: 35px;
-            height: 35px;
-            background: var(--primary);
-            border-radius: 10px;
-            display: grid;
-            place-items: center;
-            color: white;
-        }
-
-        .logo-text { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
-
-        .nav-item {
-            padding: 12px 16px;
-            margin-bottom: 6px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.2s;
-            font-weight: 600;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .nav-item:hover { background: #f1f5f9; color: var(--primary); }
-        .nav-item.active { background: var(--primary-light); color: var(--primary); }
+        .nav-group { flex: 1; }
+        .nav-item { padding: 12px 16px; margin-bottom: 6px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
 
         /* --- MAIN CONTENT --- */
-        .main {
-            margin-left: 280px;
-            flex: 1;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
+        .main { margin-left: 280px; flex: 1; padding: 30px; display: flex; flex-direction: column; gap: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; }
         .header h2 { font-size: 28px; font-weight: 800; color: var(--text-main); }
 
-        .status-badge {
-            background: #f0fdf4;
-            color: #16a34a;
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid #dcfce7;
-        }
+        .status-badge { background: #f0fdf4; color: #16a34a; padding: 8px 16px; border-radius: 12px; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; border: 1px solid #dcfce7; }
+        .pulse { width: 8px; height: 8px; background: #16a34a; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(22, 163, 74, 0); } 100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); } }
 
-        .pulse {
-            width: 8px;
-            height: 8px;
-            background: #16a34a;
-            border-radius: 50%;
-            box-shadow: 0 0 0 rgba(22, 163, 74, 0.4);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(22, 163, 74, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
-        }
-
-        /* --- MAP CONTAINER --- */
-        #map-wrapper {
-            flex: 1;
-            background: white;
-            border-radius: 24px;
-            padding: 12px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid #e2e8f0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        #map {
-            height: 100%;
-            width: 100%;
-            border-radius: 18px;
-        }
-
-        /* Custom Popup Styling */
-        .leaflet-popup-content-wrapper {
-            border-radius: 14px;
-            padding: 4px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        .bus-info-window {
-            padding: 5px;
-        }
+        #map-wrapper { flex: 1; background: white; border-radius: 24px; padding: 12px; box-shadow: var(--card-shadow); border: 1px solid #e2e8f0; overflow: hidden; position: relative; }
+        #map { height: 100%; width: 100%; border-radius: 18px; }
 
         .bus-info-window h4 { color: var(--primary); margin-bottom: 4px; }
         .bus-info-window p { font-size: 12px; color: var(--text-muted); font-weight: 600; }
-.sidebar {
-    width: 280px;
-    background: #ffffff;
-    padding: 32px 20px;
-    border-right: 1px solid #e2e8f0;
-    position: fixed;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    z-index: 1000;
-}
-
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0 12px;
-    margin-bottom: 48px;
-    text-decoration: none;
-}
-
-.logo-icon {
-    width: 35px; height: 35px;
-    background: #6366f1; /* Your Primary Indigo */
-    border-radius: 10px;
-    display: grid; place-items: center;
-    color: white;
-}
-
-.logo-text { font-size: 20px; font-weight: 800; color: #0f172a; }
-
-.nav-group { flex: 1; }
-
-.nav-item {
-    padding: 12px 16px;
-    margin-bottom: 6px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.3s;
-    font-weight: 600;
-    color: #64748b; /* Muted text */
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-}
-
-.nav-item:hover, .nav-item.active {
-    background: #eef2ff; /* Light Indigo bg */
-    color: #6366f1;
-}
-
-.sidebar-footer {
-    border-top: 1px solid #f1f5f9;
-    padding-top: 20px;
-    margin-top: auto;
-}
     </style>
 </head>
 <body>
+
 <div class="sidebar">
     <a href="index.html" class="logo-container">
-        <img src="school-logo.png" alt="Swarajya Gurukul" style="width: 80px; height: 80px; object-fit: contain;">
-        <span class="logo-text" style="font-size: 16px; font-weight: 800; color: #b8860b;">SWARAJYA GURUKUL</span>
+        <img src="school-logo.png" alt="Swarajya Gurukul" class="school-logo">
+        <span class="logo-text">SWARAJYA GURUKUL</span>
     </a>
     
     <nav class="nav-group">
-        <a href="index.html" class="nav-item" id="nav-dash">
-            <i data-lucide="layout-dashboard"></i> Dashboard
-        </a>
-        <a href="fleet.html" class="nav-item" id="nav-fleet">
-            <i data-lucide="map"></i> Live Fleet
-        </a>
-        <a href="bus-health.html" class="nav-item" id="nav-health">
-            <i data-lucide="heart-pulse"></i> Bus Health
-        </a>
-        <a href="routes.html" class="nav-item" id="nav-routes">
-            <i data-lucide="route"></i> Routes
-        </a>
-        <a href="students.html" class="nav-item" id="nav-students">
-            <i data-lucide="graduation-cap"></i> Students
-        </a>
-        <a href="driver-admin.html" class="nav-item" id="nav-driver">
-            <i data-lucide="users"></i> Driver Monitor
-        </a>
-        <a href="manage-assignment.html" class="nav-item" id="nav-duty">
-            <i data-lucide="user-cog"></i> Duty Assignments
-        </a>
-        <a href="settings.html" class="nav-item" id="nav-settings">
-            <i data-lucide="settings"></i> Settings
-        </a>
+        <a href="index.html" class="nav-item" id="nav-dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a href="fleet.html" class="nav-item active" id="nav-fleet"><i data-lucide="map"></i> Live Fleet</a>
+        <a href="bus-health.html" class="nav-item" id="nav-health"><i data-lucide="heart-pulse"></i> Bus Health</a>
+        <a href="routes.html" class="nav-item" id="nav-routes"><i data-lucide="route"></i> Routes</a>
+        <a href="students.html" class="nav-item" id="nav-students"><i data-lucide="graduation-cap"></i> Students</a>
+        <a href="driver-admin.html" class="nav-item" id="nav-driver"><i data-lucide="users"></i> Driver Monitor</a>
+        <a href="manage-assignment.html" class="nav-item" id="nav-duty"><i data-lucide="user-cog"></i> Duty Assignments</a>
+        <a href="settings.html" class="nav-item" id="nav-settings"><i data-lucide="settings"></i> Settings</a>
     </nav>
 
     <div class="sidebar-footer">
-        <div class="nav-item logout-btn" onclick="logout()">
-            <i data-lucide="log-out"></i> Logout
-        </div>
+        <div class="nav-item" onclick="logout()" style="color: #ef4444;"><i data-lucide="log-out"></i> Logout</div>
     </div>
 </div>
 
 <main class="main">
     <div class="header">
         <h2>Live Fleet Monitoring</h2>
-        <div class="status-badge">
-            <div class="pulse"></div>
-            5 Buses Active in Mira-Bhayander
-        </div>
+        <div class="status-badge"><div class="pulse"></div> 5 Buses Tracking in Mira-Bhayander</div>
     </div>
 
     <div id="map-wrapper">
@@ -273,49 +81,41 @@
 </main>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
 <script>
 lucide.createIcons();
 
-function goDashboard() { window.location.href="index.html"; }
-function goFleet() { window.location.href="fleet.html"; }
-function goRoutes() { window.location.href="routes.html"; }
-function goStudents() { window.location.href="students.html"; }
-function goSettings() { window.location.href="settings.html"; }
-
 // MAP SETUP (Centered at Mira-Bhayander)
 const map = L.map('map', { zoomControl: false }).setView([19.2952, 72.8544], 14);
-
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-// Premium Light Map Tiles
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; OpenStreetMap'
 }).addTo(map);
 
-// SCHOOL ICON (RBK School)
+// SWARAJYA GURUKUL LOGO ON MAP
 const schoolIcon = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/807/807477.png',
-    iconSize: [50, 50],
+    iconUrl: 'school-logo.png',
+    iconSize: [45, 45],
     popupAnchor: [0, -20]
 });
 
-const schoolPos = [19.3033, 72.8618];
+const schoolPos = [19.2980, 72.8560]; // Adjusted for school area
 L.marker(schoolPos, {icon: schoolIcon}).addTo(map)
-    .bindPopup("<div class='bus-info-window'><h4>🏫 RBK International</h4><p>Mira Road, Mumbai</p></div>");
+    .bindPopup("<div class='bus-info-window'><h4>🏫 Swarajya Gurukul</h4><p>Mira Road East</p></div>");
 
 // BUS ICON
 const busIcon = L.icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/3448/3448339.png',
-    iconSize: [38, 38],
+    iconSize: [35, 35],
     popupAnchor: [0, -15]
 });
 
 const colors = ["#6366f1", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
+const driverNames = ["Ramesh Kumar", "Suresh Singh", "Abdul Khan", "Mahesh Patil", "Vikram Dada"];
 const busStarts = [
-    [19.2952, 72.8544], [19.3100, 72.8500],
-    [19.2900, 72.8700], [19.3050, 72.8750],
-    [19.3150, 72.8650]
+    [19.2830, 72.8544], [19.3100, 72.8450],
+    [19.2900, 72.8720], [19.3080, 72.8750],
+    [19.3150, 72.8580]
 ];
 
 const buses = [];
@@ -327,24 +127,17 @@ async function getRoute(start, end) {
         const res = await fetch(url);
         const data = await res.json();
         return data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
-    } catch (e) {
-        return [start, end]; // Fallback if API fails
-    }
+    } catch (e) { return [start, end]; }
 }
 
 async function initFleet() {
     for (let i = 0; i < busStarts.length; i++) {
         const route = await getRoute(busStarts[i], schoolPos);
 
-        L.polyline(route, {
-            color: colors[i],
-            weight: 5,
-            opacity: 0.4,
-            lineCap: 'round'
-        }).addTo(map);
+        L.polyline(route, { color: colors[i], weight: 4, opacity: 0.3 }).addTo(map);
 
         const marker = L.marker(route[0], { icon: busIcon }).addTo(map)
-            .bindPopup(`<div class='bus-info-window'><h4>🚌 Bus #0${i+1}</h4><p>Route: ${i % 2 === 0 ? 'Normal' : 'Express'}</p><p>Speed: 32 km/h</p></div>`);
+            .bindPopup(`<div class='bus-info-window'><h4>🚌 Bus #B-0${i+1}</h4><p>Driver: ${driverNames[i]}</p><p>Status: On Route</p></div>`);
 
         buses.push({ marker, route, index: 0 });
     }
@@ -358,42 +151,15 @@ function moveFleet() {
             if (bus.index >= bus.route.length) bus.index = 0;
             bus.marker.setLatLng(bus.route[bus.index]);
         });
-    }, 1500); // Realistic speed
+    }, 2000); 
 }
 
 initFleet();
-// Current page highlight karne ke liye logic
-const path = window.location.pathname.split("/").pop();
-if (path === "index.html") document.getElementById("nav-dashboard").classList.add("active");
-if (path === "fleet.html") document.getElementById("nav-fleet").classList.add("active");
-if (path === "routes.html") document.getElementById("nav-routes").classList.add("active");
-if (path === "students.html") document.getElementById("nav-students").classList.add("active");
-if (path === "settings.html") document.getElementById("nav-settings").classList.add("active");
-// Initialize Icons
-lucide.createIcons();
 
-// Active Page Highlighter Logic
-const currentPage = window.location.pathname.split("/").pop();
-
-const navMapping = {
-    "index.html": "nav-dashboard",
-    "fleet.html": "nav-fleet",
-    "bus-health.html": "nav-health",
-    "routes.html": "nav-routes",
-    "students.html": "nav-students",
-    "settings.html": "nav-settings"
-};
-
-if (navMapping[currentPage]) {
-    document.getElementById(navMapping[currentPage]).classList.add("active");
-}
-
-// Logout Logic
 function logout() {
     localStorage.removeItem("token");
     window.location.href = "login.html";
 }
 </script>
-
 </body>
 </html>

@@ -106,41 +106,53 @@
     lucide.createIcons();
 
     function handleLogin(e) {
-    e.preventDefault();
-    const role = document.getElementById('role').value;
-    const inputID = document.getElementById('username').value; // User jo ID dalega
+        e.preventDefault();
+        const role = document.getElementById('role').value;
+        const inputID = document.getElementById('username').value;
 
-    if(role === 'admin') {
-        localStorage.setItem("token", "admin-logged-in");
-        window.location.href = "index.html"; 
-    } 
-    else if(role === 'driver') {
-        // 1. Drivers ki list (Database)
-        const driversList = [
-            { id: 1, name: "Ramesh Kumar", bus: "B-01", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ramesh" },
-            { id: 2, name: "Suresh Singh", bus: "B-02", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Suresh" },
-            { id: 3, name: "Abdul Khan", bus: "B-03", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Abdul" },
-            { id: 4, name: "Mahesh Patil", bus: "B-04", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mahesh" },
-            { id: 5, name: "Vikram Dada", bus: "B-05", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Vikram" }
-        ];
+        if(role === 'admin') {
+            localStorage.setItem("token", "admin-logged-in");
+            window.location.href = "index.html"; 
+        } 
+        else if(role === 'driver') {
+            // 1. Regular Drivers List
+            const driversList = [
+                { id: 1, name: "Ramesh Kumar", bus: "B-01", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ramesh" },
+                { id: 2, name: "Suresh Singh", bus: "B-02", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Suresh" },
+                { id: 3, name: "Abdul Khan", bus: "B-03", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Abdul" },
+                { id: 4, name: "Mahesh Patil", bus: "B-04", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mahesh" },
+                { id: 5, name: "Vikram Dada", bus: "B-05", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Vikram" }
+            ];
 
-        // 2. Input ID ke hisaab se driver dhoondna
-        const foundDriver = driversList.find(d => d.id == inputID);
+            // 2. Standby Driver Pool (Backup Specialists)
+            const standbyList = [
+                { id: 101, name: "Rajesh Khanna", role: "Backup Specialist 1", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Rajesh" },
+                { id: 102, name: "Sanjay Dutt", role: "Backup Specialist 2", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sanjay" }
+            ];
 
-        if (foundDriver) {
-            localStorage.setItem("currentDriver", JSON.stringify(foundDriver));
-            window.location.href = "driver-dashboard.html";
-        } else {
-            alert("Galat Driver ID! Please try 1 to 5.");
+            // Check in Regular List
+            const foundDriver = driversList.find(d => d.id == inputID);
+            // Check in Standby List
+            const foundStandby = standbyList.find(d => d.id == inputID);
+
+            if (foundDriver) {
+                localStorage.setItem("currentDriver", JSON.stringify(foundDriver));
+                window.location.href = "driver-dashboard.html";
+            } 
+            else if (foundStandby) {
+                localStorage.setItem("currentDriver", JSON.stringify(foundStandby));
+                window.location.href = "standby-dashboard.html"; // Standby Portal par redirect
+            }
+            else {
+                alert("Invalid ID! Regular: 1-5 | Standby: 101-102");
+            }
+        } 
+        else if(role === 'cleaner') {
+            const mockCleaner = { id: inputID, name: "Helper " + inputID, bus: "B-0" + inputID };
+            localStorage.setItem("currentCleaner", JSON.stringify(mockCleaner));
+            window.location.href = "cleaner-dashboard.html";
         }
-    } 
-    else if(role === 'cleaner') {
-        // Cleaner ke liye bhi same logic laga sakte hain
-        const mockCleaner = { id: inputID, name: "Helper " + inputID, bus: "B-0" + inputID };
-        localStorage.setItem("currentCleaner", JSON.stringify(mockCleaner));
-        window.location.href = "cleaner-dashboard.html";
     }
-}
 </script>
 </body>
 </html>

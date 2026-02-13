@@ -3,242 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swarajya Gurukul | Cleaner Dashboard</title>
-    
+    <title>Swarajya Gurukul | Staff Portal</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <style>
-        :root {
-            --primary: #8b5cf6;
-            --primary-dark: #7c3aed;
-            --primary-light: #f5f3ff;
-            --sidebar-bg: #1e1b4b;
-            --bg: #f8fafc;
-            --white: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 8px 15px -6px rgba(0, 0, 0, 0.02);
-        }
-
+        :root { --primary: #8b5cf6; --bg: #f8fafc; --white: #ffffff; --sidebar-bg: #1e1b4b; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); display: flex; min-height: 100vh; }
-
-        /* --- SIDEBAR UPDATED WITH SCHOOL LOGO --- */
-        .sidebar {
-            width: 280px; background: var(--sidebar-bg); color: white; padding: 40px 24px;
-            position: fixed; height: 100vh; display: flex; flex-direction: column; z-index: 100;
-            align-items: center;
-        }
-        
-        /* Swarajya Gurukul Logo */
-        .school-logo { 
-            width: 90px; 
-            height: 90px; 
-            object-fit: contain;
-            margin-bottom: 15px;
-        }
-
-        .logo-text { 
-            font-size: 18px; 
-            font-weight: 800; 
-            color: #fbbf24; 
-            letter-spacing: 0.5px;
-            margin-bottom: 40px;
-            text-align: center;
-            text-transform: uppercase;
-        }
-
-        .nav-group { width: 100%; flex: 1; }
-        .nav-item {
-            padding: 16px 20px; border-radius: 16px; color: #a5b4fc; text-decoration: none;
-            display: flex; align-items: center; gap: 14px; margin-bottom: 10px; transition: 0.3s; font-weight: 600;
-        }
-        .nav-item:hover, .nav-item.active { background: rgba(255, 255, 255, 0.1); color: white; }
-        .nav-item.active { background: var(--primary); box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3); }
-
-        /* --- MAIN CONTENT --- */
-        .main { margin-left: 280px; width: calc(100% - 280px); padding: 50px 60px; }
-        
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .staff-badge { 
-            background: white; padding: 10px 25px; border-radius: 50px; 
-            display: flex; align-items: center; gap: 12px; box-shadow: var(--card-shadow);
-            border: 1px solid #f1f5f9;
-        }
-
-        .grid { display: grid; grid-template-columns: 1.8fr 1fr; gap: 30px; }
-        .card { background: white; padding: 35px; border-radius: 30px; border: 1px solid #f1f5f9; box-shadow: var(--card-shadow); }
-        .card-title { font-size: 20px; font-weight: 800; margin-bottom: 25px; display: flex; align-items: center; gap: 12px; }
-        .card-title i { color: var(--primary); }
-
-        .student-row { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 18px 20px; border-radius: 20px; border: 1px solid #f8fafc;
-            margin-bottom: 12px; transition: 0.2s;
-        }
-        .student-row:hover { background: #fdfdff; border-color: var(--primary-light); }
-        .student-info strong { font-size: 16px; color: var(--text-main); }
-        .student-info small { color: var(--text-muted); font-weight: 600; }
-
-        .status-btn { 
-            padding: 10px 20px; border-radius: 14px; cursor: pointer; font-size: 13px; 
-            font-weight: 700; border: none; transition: 0.3s;
-        }
-        .not-on { background: #f1f5f9; color: #64748b; }
-        .on-board { background: #dcfce7; color: #15803d; box-shadow: 0 4px 10px rgba(21, 128, 61, 0.1); }
-
-        .task-item { 
-            display: flex; align-items: center; gap: 15px; padding: 15px; 
-            background: #f8fafc; border-radius: 18px; margin-bottom: 15px; cursor: pointer;
-        }
-        .task-item input[type="checkbox"] { 
-            width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer;
-        }
-        .task-item label { font-weight: 600; font-size: 14px; cursor: pointer; flex: 1; }
-
-        .submit-btn { 
-            width: 100%; padding: 18px; background: var(--primary); color: white; 
-            border: none; border-radius: 18px; font-weight: 800; cursor: pointer; 
-            transition: 0.3s; margin-top: 20px; font-size: 16px;
-        }
-        .submit-btn:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(124, 58, 237, 0.2); }
-
-        .progress-box { margin-bottom: 30px; background: var(--primary-light); padding: 25px; border-radius: 24px; border: 1px solid #e0e7ff; }
-        .progress-bar { height: 10px; background: #e2e8f0; border-radius: 10px; margin-top: 15px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 1s ease; }
+        body { background-color: var(--bg); display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 40px 20px; position: fixed; height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        .main { margin-left: 260px; flex: 1; padding: 40px; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .student-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #f1f5f9; }
+        .btn-status { padding: 8px 16px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 12px; }
+        .btn-present { background: #f1f5f9; color: #64748b; }
+        .btn-present.active { background: #dcfce7; color: #15803d; }
+        .btn-absent { background: #f1f5f9; color: #64748b; }
+        .btn-absent.active { background: #fee2e2; color: #b91c1c; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 10px; }
+        .calendar-day { padding: 8px; text-align: center; border-radius: 8px; font-size: 11px; background: #f8fafc; }
+        .calendar-day.present { background: #dcfce7; color: #15803d; }
     </style>
 </head>
 <body>
-
     <div class="sidebar">
-        <img src="school-logo.png" alt="Swarajya Gurukul" class="school-logo">
-        <div class="logo-text">Swarajya Gurukul</div>
-        
-        <nav class="nav-group">
-            <a href="cleaner-dashboard.html" class="nav-item active"><i data-lucide="clipboard-check"></i> Safety Check</a>
-            <a href="students.html" class="nav-item"><i data-lucide="users"></i> Student List</a>
+        <img src="school-logo.png" style="width: 70px; margin-bottom: 10px;">
+        <h2 style="font-size: 16px; color: #fbbf24; margin-bottom: 30px;">SWARAJYA GURUKUL</h2>
+        <nav style="width: 100%;">
+            <div class="nav-item" style="padding: 15px; background: var(--primary); border-radius: 10px; cursor: pointer;">
+                <i data-lucide="users"></i> Student Boarding
+            </div>
         </nav>
-        
-        <div class="nav-item" onclick="logout()" style="margin-top: auto; color: #fca5a5; width: 100%;"><i data-lucide="log-out"></i> Logout</div>
+        <div onclick="logout()" style="margin-top: auto; cursor: pointer; color: #fca5a5;"><i data-lucide="log-out"></i> Logout</div>
     </div>
 
     <main class="main">
-        <header>
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
             <div>
-                <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -1px;">Bus Safety Checklist</h1>
-                <p style="color: var(--text-muted); margin-top: 5px;">Route: <strong id="busId">B-01</strong> | <span id="currentDate"></span></p>
+                <h1 id="busHeader">Bus Loading...</h1>
+                <p id="cleanerInfo" style="color: #64748b;"></p>
             </div>
-            <div class="staff-badge">
-                <div style="text-align: right;">
-                    <p style="font-size: 14px; font-weight: 800;" id="cleanerName">Loading...</p>
-                    <p style="font-size: 11px; color: var(--primary); font-weight: 700; text-transform: uppercase;">Bus Attendant</p>
-                </div>
-                <i data-lucide="user-check" style="color: var(--primary);"></i>
-            </div>
+            <button onclick="markStaffAttendance()" id="staffBtn" class="btn-status" style="background: var(--primary); color: white; padding: 12px 20px;">Mark Staff Attendance</button>
         </header>
 
-        <div class="progress-box">
-            <div style="display: flex; justify-content: space-between; font-weight: 700;">
-                <span>Boarding Completion</span>
-                <span id="progressText">0/5 Students</span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-        </div>
-
-        <div class="grid">
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
             <div class="card">
-                <div class="card-title"><i data-lucide="users"></i> Student Boarding (Mira Road)</div>
-                <div id="studentContainer"></div>
+                <h3>Students List (Route Area)</h3>
+                <div id="studentList" style="margin-top: 20px;"></div>
             </div>
-
-            <div class="card" style="height: fit-content;">
-                <div class="card-title"><i data-lucide="wrench"></i> Hygiene & Safety</div>
-                <div class="task-item">
-                    <input type="checkbox" id="t1" checked>
-                    <label for="t1">Seats Sanitized & Dry</label>
-                </div>
-                <div class="task-item">
-                    <input type="checkbox" id="t2">
-                    <label for="t2">Windows & Glass Cleaned</label>
-                </div>
-                <div class="task-item">
-                    <input type="checkbox" id="t3">
-                    <label for="t3">First Aid Kit Checked</label>
-                </div>
-                <div class="task-item">
-                    <input type="checkbox" id="t4">
-                    <label for="t4">Emergency Exit Unblocked</label>
-                </div>
-                
-                <button class="submit-btn" onclick="submitReport()">Submit Safety Report</button>
+            
+            <div class="card">
+                <h3>My Attendance</h3>
+                <div class="calendar-grid" id="calendar"></div>
             </div>
         </div>
     </main>
 
+    <script src="students.js"></script>
     <script>
         lucide.createIcons();
-
-        // Session check with redirect to common login
         const staff = JSON.parse(localStorage.getItem("currentCleaner"));
         if(!staff) window.location.href = "login.html";
 
-        document.getElementById('cleanerName').innerText = staff.name;
-        document.getElementById('busId').innerText = staff.bus;
-        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short' });
+        document.getElementById('busHeader').innerText = "Route " + staff.bus;
+        document.getElementById('cleanerInfo').innerText = "Attendant: " + staff.name;
 
-        const students = ["Aarav Sharma", "Vihaan Patel", "Anaya Verma", "Sai Joshi", "Ishaan Gupta"];
-        let boardedCount = 0;
+        // Filter students for this cleaner's bus
+        const myStudents = globalStudentData.filter(s => s.bus === staff.bus);
 
         function renderStudents() {
-            const container = document.getElementById('studentContainer');
-            container.innerHTML = students.map((s, i) => `
-                <div class="student-row">
-                    <div class="student-info">
-                        <strong>${s}</strong><br>
-                        <small><i data-lucide="map-pin" style="width:12px; vertical-align:middle;"></i> Mira Road Sector 10</small>
+            const list = document.getElementById('studentList');
+            list.innerHTML = myStudents.map(s => {
+                const status = localStorage.getItem(`status_${s.id}_${getToday()}`) || "";
+                return `
+                <div class="student-item">
+                    <div>
+                        <strong style="font-size: 14px;">${s.name}</strong><br>
+                        <small style="color: #64748b;">${s.area}</small>
                     </div>
-                    <button class="status-btn not-on" onclick="toggleBoarding(this, ${i})">Mark On-Board</button>
-                </div>
-            `).join('');
-            lucide.createIcons();
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-status btn-present ${status === 'Present' ? 'active' : ''}" onclick="setStatus(${s.id}, 'Present')">Present</button>
+                        <button class="btn-status btn-absent ${status === 'Absent' ? 'active' : ''}" onclick="setStatus(${s.id}, 'Absent')">Absent</button>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
-        function toggleBoarding(btn, index) {
-            if(btn.classList.contains('not-on')) {
-                btn.classList.replace('not-on', 'on-board');
-                btn.innerHTML = 'On-Board <i data-lucide="check" style="width:14px;"></i>';
-                boardedCount++;
-            } else {
-                btn.classList.replace('on-board', 'not-on');
-                btn.innerHTML = 'Mark On-Board';
-                boardedCount--;
+        function setStatus(id, status) {
+            localStorage.setItem(`status_${id}_${getToday()}`, status);
+            renderStudents();
+        }
+
+        function getToday() {
+            const d = new Date();
+            return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+        }
+
+        function markStaffAttendance() {
+            localStorage.setItem("cleaner_present_" + staff.id, getToday());
+            const history = JSON.parse(localStorage.getItem("cleaner_history_" + staff.id)) || [];
+            if(!history.includes(new Date().getDate())) {
+                history.push(new Date().getDate());
+                localStorage.setItem("cleaner_history_" + staff.id, JSON.stringify(history));
             }
-            lucide.createIcons();
-            updateProgress();
+            renderCalendar();
+            alert("Attendance Marked for Admin!");
         }
 
-        function updateProgress() {
-            const percent = (boardedCount / students.length) * 100;
-            document.getElementById('progressFill').style.width = percent + '%';
-            document.getElementById('progressText').innerText = `${boardedCount}/${students.length} Students`;
-            
-            // Sync Cleaner presence with Admin
-            const today = `${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`;
-            localStorage.setItem("cleaner_present_" + staff.id, today);
+        function renderCalendar() {
+            const cal = document.getElementById('calendar');
+            const history = JSON.parse(localStorage.getItem("cleaner_history_" + staff.id)) || [];
+            cal.innerHTML = "";
+            for(let i=1; i<=28; i++) {
+                const active = history.includes(i) ? "present" : "";
+                cal.innerHTML += `<div class="calendar-day ${active}">${i}</div>`;
+            }
         }
 
-        function submitReport() {
-            alert("Safety Report Submitted to Admin!");
-        }
+        function logout() { localStorage.removeItem("currentCleaner"); window.location.href = "login.html"; }
 
-        // Fixed Logout to point to login.html
-        function logout() {
-            localStorage.removeItem("currentCleaner");
-            window.location.href = "login.html";
-        }
-
-        renderStudents();
+        window.onload = () => { renderStudents(); renderCalendar(); };
     </script>
 </body>
 </html>

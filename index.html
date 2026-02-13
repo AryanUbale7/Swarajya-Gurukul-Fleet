@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Swarajya Gurukul | Admin Dashboard</title>
     
-   <script>
-    // 1. Check karein ki localStorage mein 'token' hai ya nahi
-    const userToken = localStorage.getItem("token");
-    console.log("Current Token Status:", userToken);
-
-    // 2. Agar token 'null' hai ya exist nahi karta, toh login par bhejein
-    if (!userToken || userToken === null) {
-        window.location.replace("login.html"); // .replace use karne se back button kaam nahi karega
-    }
-</script>
+    <script>
+        const userToken = localStorage.getItem("token");
+        if (!userToken || userToken === null) {
+            window.location.replace("login.html");
+        }
+    </script>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -24,49 +20,34 @@
         :root {
             --primary: #6366f1; --primary-dark: #4f46e5; --bg-body: #f3f4f6;
             --sidebar-bg: #ffffff; --text-main: #0f172a; --text-muted: #64748b;
-            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background-color: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; }
 
-        /* --- SIDEBAR --- */
         .sidebar { width: 280px; background: var(--sidebar-bg); padding: 32px 20px; border-right: 1px solid #e2e8f0; position: fixed; height: 100vh; display: flex; flex-direction: column; z-index: 1000; }
-        
-        .logo-container { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 10px; 
-            margin-bottom: 40px; 
-            text-decoration: none; 
-            color: inherit; 
-            text-align: center;
-        }
-        /* image_757da9.jpg is assigned as the school logo */
-        .school-logo { 
-            width: 80px; 
-            height: 80px; 
-            object-fit: contain;
-        }
-        .logo-text { font-size: 16px; font-weight: 800; color: #b8860b; letter-spacing: 0.5px; }
+        .logo-container { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 40px; text-decoration: none; color: inherit; text-align: center; }
+        .school-logo { width: 80px; height: 80px; object-fit: contain; }
+        .logo-text { font-size: 16px; font-weight: 800; color: #b8860b; }
 
-        .nav-group { flex: 1; }
         .nav-item { padding: 12px 16px; margin-bottom: 6px; border-radius: 12px; cursor: pointer; transition: 0.3s; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 12px; text-decoration: none; }
         .nav-item:hover, .nav-item.active { background: #eef2ff; color: var(--primary); }
-        .sidebar-footer { border-top: 1px solid #f1f5f9; padding-top: 20px; margin-top: auto; }
-        .logout-btn { color: #ef4444 !important; }
 
         .main { margin-left: 280px; flex: 1; padding: 40px 60px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
         .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
-        .card { background: white; padding: 24px; border-radius: 20px; box-shadow: var(--card-shadow); transition: 0.2s; border: 1px solid #e2e8f0; }
+        .card { background: white; padding: 24px; border-radius: 20px; box-shadow: var(--card-shadow); border: 1px solid #e2e8f0; }
+        
         .charts-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 24px; margin-bottom: 32px; }
         .chart-box { background: white; padding: 28px; border-radius: 24px; border: 1px solid #e2e8f0; height: 420px; box-shadow: var(--card-shadow); }
+        
         .table-box { background: white; padding: 32px; border-radius: 24px; border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); }
-        .table-row { display: grid; grid-template-columns: 0.8fr 1.5fr 1.2fr 1fr 1fr; padding: 18px 12px; border-bottom: 1px solid #f1f5f9; align-items: center; }
-        .status-pill { padding: 6px 14px; border-radius: 10px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+        /* Adjusted grid for Student boarding stats */
+        .table-row { display: grid; grid-template-columns: 0.5fr 1fr 1fr 1fr 0.8fr 0.6fr; padding: 18px 12px; border-bottom: 1px solid #f1f5f9; align-items: center; }
+        
+        .status-pill { padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
         .present { background: #dcfce7; color: #15803d; }
+        .absent { background: #fee2e2; color: #b91c1c; }
         .waiting { background: #f1f5f9; color: #94a3b8; }
         .moving { background: #ecfdf5; color: #059669; }
     </style>
@@ -78,35 +59,43 @@
         <img src="school-logo.png" alt="Swarajya Gurukul" class="school-logo">
         <span class="logo-text">SWARAJYA GURUKUL</span>
     </a>
-    
     <nav class="nav-group">
-        <a href="index.html" class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-        <a href="fleet.html" class="nav-item"><i data-lucide="map"></i> Live Fleet</a>
-        <a href="bus-health.html" class="nav-item"><i data-lucide="heart-pulse"></i> Bus Health</a>
-        <a href="routes.html" class="nav-item"><i data-lucide="route"></i> Routes</a>
-        <a href="students.html" class="nav-item"><i data-lucide="graduation-cap"></i> Students</a>
-        <a href="driver-admin.html" class="nav-item"><i data-lucide="users"></i> Driver Monitor</a>
-        <a href="manage-assignment.html" class="nav-item"><i data-lucide="user-cog"></i> Duty Assignments</a>
-        <a href="settings.html" class="nav-item"><i data-lucide="settings"></i> Settings</a>
+        <a href="index.html" class="nav-item" id="nav-dash">
+            <i data-lucide="layout-dashboard"></i> Dashboard
+        </a>
+        <a href="fleet.html" class="nav-item" id="nav-fleet">
+            <i data-lucide="map"></i> Live Fleet
+        </a>
+        <a href="bus-health.html" class="nav-item" id="nav-health">
+            <i data-lucide="heart-pulse"></i> Bus Health
+        </a>
+        <a href="routes.html" class="nav-item" id="nav-routes">
+            <i data-lucide="route"></i> Routes
+        </a>
+        <a href="students.html" class="nav-item" id="nav-students">
+            <i data-lucide="graduation-cap"></i> Students
+        </a>
+        <a href="driver-admin.html" class="nav-item" id="nav-driver">
+            <i data-lucide="users"></i> Driver Monitor
+        </a>
+        <a href="manage-assignment.html" class="nav-item" id="nav-duty">
+            <i data-lucide="user-cog"></i> Duty Assignments
+        </a>
+        <a href="settings.html" class="nav-item" id="nav-settings">
+            <i data-lucide="settings"></i> Settings
+        </a>
     </nav>
-
-    <div class="sidebar-footer">
-        <div class="nav-item logout-btn" onclick="logout()">
-            <i data-lucide="log-out"></i> Logout
-        </div>
-    </div>
+    <div class="sidebar-footer" style="margin-top:auto;"><div class="nav-item" onclick="logout()" style="color:#ef4444;"><i data-lucide="log-out"></i> Logout</div></div>
 </div>
 
 <main class="main">
-    <header class="header">
-        <div class="header-title"><h1>Fleet Intelligence</h1><p>Welcome back, Admin! Managing <b>Mira Bhayandar</b> district.</p></div>
-    </header>
+    <header style="margin-bottom:40px;"><h1>Fleet Intelligence</h1><p>Real-time Student Boarding & Staff Monitoring</p></header>
 
     <div class="cards-grid">
-        <div class="card"><span>Total Students</span><h2>190</h2></div>
-        <div class="card"><span>Active Buses</span><h2>5</h2></div>
-        <div class="card"><span>Avg Capacity</span><h2>81%</h2></div>
-        <div class="card"><span>On-Time Rate</span><h2>96%</h2></div>
+        <div class="card"><span style="font-size:12px;color:var(--text-muted)">TOTAL STUDENTS</span><h2 id="totalCount">190</h2></div>
+        <div class="card"><span style="font-size:12px;color:var(--text-muted)">PRESENT TODAY</span><h2 id="presentCount" style="color:#10b981">0</h2></div>
+        <div class="card"><span style="font-size:12px;color:var(--text-muted)">ABSENT TODAY</span><h2 id="absentCount" style="color:#ef4444">0</h2></div>
+        <div class="card"><span style="font-size:12px;color:var(--text-muted)">ACTIVE BUSES</span><h2>5</h2></div>
     </div>
 
     <div class="charts-grid">
@@ -119,67 +108,84 @@
     </div>
 </main>
 
+<script src="students.js"></script>
 <script>
     lucide.createIcons();
 
-    // Logout Function
-    function logout() {
-        localStorage.removeItem("token");
-        window.location.href = "login.html";
-    }
-
     const busData = [
-        {id: 1, area: "Mira Road", students: 42, status: "Moving"},
-        {id: 2, area: "Bhayandar East", students: 38, status: "Moving"},
-        {id: 3, area: "Kashimira", students: 47, status: "Arrived"},
-        {id: 4, area: "Golden Nest", students: 29, status: "Moving"},
-        {id: 5, area: "Uttan", students: 34, status: "Moving"}
+        {id: 1, area: "Mira Road", status: "Moving"},
+        {id: 2, area: "Bhayandar East", status: "Moving"},
+        {id: 3, area: "Kashimira", status: "Arrived"},
+        {id: 4, area: "Golden Nest", status: "Moving"},
+        {id: 5, area: "Uttan", status: "Moving"}
     ];
 
-    function getDefaultDriver(busId) {
-        const drivers = { 1: "Ramesh Kumar", 2: "Suresh Singh", 3: "Abdul Khan", 4: "Mahesh Patil", 5: "Vikram Dada" };
-        return drivers[parseInt(busId)] || "Assigned Driver";
-    }
+    function logout() { localStorage.removeItem("token"); window.location.href = "login.html"; }
 
     function renderDashboard() {
         const tableBody = document.getElementById('busTableBody');
-        if(!tableBody) return;
-        
-        tableBody.innerHTML = `<div class="table-row header" style="font-weight:700; color:var(--text-muted); font-size:11px;">
-            <div>BUS ID</div><div>STAFF ASSIGNED</div><div>ROUTE AREA</div><div>ATTENDANCE</div><div>STATUS</div>
-        </div>`;
-
-        const assignments = JSON.parse(localStorage.getItem("active_assignments")) || {};
         const now = new Date();
-        const today = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+        const todayStr = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+
+        tableBody.innerHTML = `
+            <div class="table-row header" style="font-weight:700; color:var(--text-muted); font-size:11px; border-bottom: 2px solid #f1f5f9; margin-bottom: 10px;">
+                <div>BUS ID</div>
+                <div>DRIVER STAFF</div>
+                <div>CLEANER STAFF</div>
+                <div>BOARDING (P/A)</div>
+                <div>ROUTE</div>
+                <div>STATUS</div>
+            </div>`;
+
+        let totalPresent = 0;
+        let totalAbsent = 0;
 
         busData.forEach(bus => {
-            const driverName = assignments["B-0" + bus.id] || getDefaultDriver(bus.id);
+            // Staff Logic
+            const isCPresent = localStorage.getItem("cleaner_present_" + bus.id) === todayStr;
             const history = JSON.parse(localStorage.getItem("history_" + bus.id)) || [];
-            const isPresent = history.some(r => r.date === today && r.status === 'Present');
+            const isDPresent = history.some(r => r.date === todayStr && r.status === 'Present');
+
+            // Student Boarding Logic from shared students.js
+            const busStudents = globalStudentData.filter(s => s.bus === "B-0" + bus.id);
+            let p = 0, a = 0;
+            busStudents.forEach(s => {
+                const status = localStorage.getItem(`status_${s.id}_${todayStr}`);
+                if(status === 'Present') p++;
+                if(status === 'Absent') a++;
+            });
+            totalPresent += p;
+            totalAbsent += a;
 
             tableBody.innerHTML += `
                 <div class="table-row">
-                    <div style="font-weight: 700;">#B-0${bus.id}</div>
-                    <div style="font-weight: 600; color: var(--primary);">${driverName}</div>
-                    <div style="color: var(--text-muted);">${bus.area}</div>
-                    <div><span class="status-pill ${isPresent ? 'present' : 'waiting'}">${isPresent ? 'Present' : 'Waiting'}</span></div>
+                    <div style="font-weight:700;">#B-0${bus.id}</div>
+                    <div><span style="font-size:13px;font-weight:600;">Driver ${bus.id}</span><br><small class="status-pill ${isDPresent ? 'present' : 'waiting'}">${isDPresent ? 'Active' : 'Offline'}</small></div>
+                    <div><span style="font-size:13px;font-weight:600;">Helper ${bus.id}</span><br><small class="status-pill ${isCPresent ? 'present' : 'waiting'}">${isCPresent ? 'On-Board' : 'Pending'}</small></div>
+                    <div>
+                        <b style="color:#10b981">${p}</b> / <b style="color:#ef4444">${a}</b>
+                        <br><small style="color:var(--text-muted);font-size:9px;">Total: ${busStudents.length}</small>
+                    </div>
+                    <div style="color:var(--text-muted);font-size:12px;">${bus.area}</div>
                     <div><span class="status-pill moving">${bus.status}</span></div>
                 </div>`;
         });
+
+        document.getElementById('presentCount').innerText = totalPresent;
+        document.getElementById('absentCount').innerText = totalAbsent;
     }
 
     function renderCharts() {
         const labels = busData.map(b => b.area);
-        const counts = busData.map(b => b.students);
-        new Chart(document.getElementById('areaChart'), { type: 'bar', data: { labels: labels, datasets: [{ label: 'Students', data: counts, backgroundColor: '#6366f1', borderRadius: 8 }] }, options: { maintainAspectRatio: false } });
-        new Chart(document.getElementById('capacityChart'), { type: 'doughnut', data: { labels: labels, datasets: [{ data: counts, backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'] }] }, options: { maintainAspectRatio: false, cutout: '70%' } });
+        const counts = busData.map(b => globalStudentData.filter(s => s.bus === "B-0"+b.id).length);
+        new Chart(document.getElementById('areaChart'), { type: 'bar', data: { labels: labels, datasets: [{ label: 'Total Students Assigned', data: counts, backgroundColor: '#6366f1', borderRadius: 8 }] }, options: { maintainAspectRatio: false } });
+        new Chart(document.getElementById('capacityChart'), { type: 'doughnut', data: { labels: ['Present', 'Absent', 'Pending'], datasets: [{ data: [10, 5, 175], backgroundColor: ['#10b981', '#ef4444', '#e2e8f0'] }] }, options: { maintainAspectRatio: false, cutout: '75%' } });
     }
 
     window.onload = () => {
         renderDashboard();
         renderCharts();
-        setInterval(renderDashboard, 3000); // 3-second live sync check
+        setInterval(renderDashboard, 3000); // Live sync every 3 seconds
     };
 </script>
 </body>

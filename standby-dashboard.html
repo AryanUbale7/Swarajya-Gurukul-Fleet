@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swarajya Gurukul | Standby Portal</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1; --primary-dark: #4f46e5; --sidebar-bg: #1e1b4b;
+            --bg: #f8fafc; --white: #ffffff; --text-main: #0f172a; --text-muted: #64748b;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg); display: flex; min-height: 100vh; }
+
+        /* --- SIDEBAR --- */
+        .sidebar { width: 280px; background: var(--sidebar-bg); color: white; padding: 40px 24px; position: fixed; height: 100vh; display: flex; flex-direction: column; z-index: 100; align-items: center; }
+        .school-logo { width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px; }
+        .logo-text { font-size: 16px; font-weight: 800; color: #fbbf24; margin-bottom: 40px; text-transform: uppercase; }
+
+        /* --- MAIN CONTENT --- */
+        .main { margin-left: 280px; width: calc(100% - 280px); padding: 40px 60px; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+
+        .duty-card { background: white; padding: 35px; border-radius: 30px; border-left: 10px solid #10b981; box-shadow: var(--card-shadow); }
+        .status-badge { padding: 8px 16px; border-radius: 12px; font-size: 13px; font-weight: 800; text-transform: uppercase; }
+        .on-standby { background: #fefce8; color: #854d0e; }
+        .active-duty { background: #dcfce7; color: #15803d; }
+
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-top: 20px; }
+        .calendar-day { padding: 15px 5px; text-align: center; border-radius: 12px; font-size: 12px; font-weight: 700; background: #f1f5f9; border: 1px solid #e2e8f0; position: relative; }
+        .calendar-day.present { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+        .calendar-day.present::after { content: 'Duty'; font-size: 8px; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); }
+
+        .action-btn { background: var(--primary); color: white; border: none; padding: 16px 30px; border-radius: 16px; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 20px; }
+        .action-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <img src="school-logo.png" class="school-logo">
+        <div class="logo-text">Swarajya Gurukul</div>
+        <nav style="width: 100%;">
+            <a href="#" class="nav-item active" style="color: white; text-decoration: none; display: flex; gap: 12px; padding: 16px; background: rgba(255,255,255,0.1); border-radius: 15px;">
+                <i data-lucide="shield-check"></i> Standby Portal
+            </a>
+        </nav>
+        <div onclick="logout()" style="margin-top: auto; color: #fca5a5; cursor: pointer;"><i data-lucide="log-out"></i> Logout</div>
+    </div>
+
+    <main class="main">
+        <header>
+            <div>
+                <h1 id="driverName" style="font-size: 32px; font-weight: 800;">Specialist Loading...</h1>
+                <p id="driverRole" style="color: var(--text-muted); font-weight: 600;"></p>
+            </div>
+            <div style="background: white; padding: 10px 20px; border-radius: 50px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 10px;">
+                <span id="currentDate" style="font-weight: 700; font-size: 14px;"></span>
+                <i data-lucide="calendar" style="color: var(--primary);"></i>
+            </div>
+        </header>
+
+        <div class="duty-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="color: var(--text-muted); font-size: 12px; letter-spacing: 1px;">TODAY'S EMERGENCY ASSIGNMENT</h3>
+                    <h2 id="dutyStatus" style="font-size: 24px; margin: 10px 0;">No Active Duty</h2>
+                </div>
+                <span class="status-badge on-standby" id="statusLabel">On Standby</span>
+            </div>
+            
+            <div id="busDetails" style="display: none; background: #f8fafc; padding: 20px; border-radius: 15px; margin-top: 20px;">
+                <p style="font-size: 12px; font-weight: 800; color: var(--primary);">ASSIGNED VEHICLE</p>
+                <h2 id="assignedBusId" style="font-size: 28px;">#B-01</h2>
+            </div>
+
+            <button class="action-btn" id="markAttendanceBtn" onclick="markEmergencyDuty()">Mark Emergency Duty Attendance</button>
+        </div>
+
+        <div style="background: white; padding: 30px; border-radius: 30px; margin-top: 30px; box-shadow: var(--card-shadow);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>Duty Attendance (February 2026)</h3>
+                <span style="font-weight: 800; color: var(--primary);" id="dutyCount">0 Duties Logged</span>
+            </div>
+            <div class="calendar-grid" id="calendar"></div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        const driver = JSON.parse(localStorage.getItem("currentDriver"));
+        if(!driver) window.location.href = "login.html";
+
+        document.getElementById('driverName').innerText = "Specialist: " + driver.name;
+        document.getElementById('driverRole').innerText = driver.role;
+        document.getElementById('currentDate').innerText = new Date().toDateString();
+
+        let assignedBus = null;
+
+        function checkAssignment() {
+            const assignments = JSON.parse(localStorage.getItem("active_assignments")) || {};
+            const statusLabel = document.getElementById('statusLabel');
+            const dutyStatus = document.getElementById('dutyStatus');
+            const busDetails = document.getElementById('busDetails');
+            const markBtn = document.getElementById('markAttendanceBtn');
+
+            // Find if this driver is assigned to any bus
+            for (const [bus, name] of Object.entries(assignments)) {
+                if (name === driver.name) { assignedBus = bus; break; }
+            }
+
+            if (assignedBus) {
+                statusLabel.innerText = "Active Duty";
+                statusLabel.className = "status-badge active-duty";
+                dutyStatus.innerText = "Emergency Deployment Active";
+                busDetails.style.display = "block";
+                document.getElementById('assignedBusId').innerText = assignedBus;
+                markBtn.disabled = false;
+            } else {
+                statusLabel.innerText = "On Standby";
+                statusLabel.className = "status-badge on-standby";
+                dutyStatus.innerText = "Waiting for Emergency Assignment";
+                busDetails.style.display = "none";
+                markBtn.disabled = true;
+            }
+        }
+
+        function markEmergencyDuty() {
+            const historyKey = "standby_history_" + driver.id;
+            let history = JSON.parse(localStorage.getItem(historyKey)) || [];
+            const today = new Date().getDate();
+            const todayStr = `${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`;
+
+            if (!history.includes(today)) {
+                history.push(today);
+                localStorage.setItem(historyKey, JSON.stringify(history));
+                
+                // Sync with Main Admin Table for the assigned bus
+                const busNum = assignedBus.replace("B-0", "");
+                const adminHistory = [{ date: todayStr, status: 'Present' }];
+                localStorage.setItem("history_" + busNum, JSON.stringify(adminHistory));
+
+                renderCalendar();
+                alert("Attendance recorded! You are now marked 'Active' on Admin Dashboard.");
+            }
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar');
+            const history = JSON.parse(localStorage.getItem("standby_history_" + driver.id)) || [];
+            document.getElementById('dutyCount').innerText = `${history.length} Duties Logged`;
+            
+            grid.innerHTML = "";
+            for(let i = 1; i <= 28; i++) {
+                const active = history.includes(i) ? "present" : "";
+                grid.innerHTML += `<div class="calendar-day ${active}">${i}</div>`;
+            }
+        }
+
+        function logout() { localStorage.removeItem("currentDriver"); window.location.href = "login.html"; }
+
+        window.onload = () => { checkAssignment(); renderCalendar(); };
+    </script>
+</body>
+</html>

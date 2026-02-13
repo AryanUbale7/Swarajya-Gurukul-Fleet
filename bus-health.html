@@ -55,10 +55,49 @@
         .status-pill { padding: 6px 14px; border-radius: 100px; font-size: 11px; font-weight: 800; display: inline-block; }
         .ok { background: #ecfdf5; color: var(--success); }
         .warn { background: #fff7ed; color: var(--warning); }
+        /* Sidebar Header Styling */
+.logo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px; /* Space before nav items */
+    padding: 0 10px;
+}
+
+.main-logo {
+    width: 85px;  /* Standard Size */
+    height: 85px;
+    object-fit: contain;
+}
+
+.brand-name {
+    font-size: 16px;
+    font-weight: 800;
+    color: #b8860b; /* Professional Gold/Mustard */
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 0;
+}
+
+/* Sidebar structure fix */
+.sidebar {
+    width: 280px;
+    background: #ffffff;
+    padding: 35px 20px;
+    border-right: 1px solid #e2e8f0;
+    position: fixed;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
     </style>
 </head>
 <body>
 <div class="sidebar">
+    
     <a href="index.html" class="logo-container">
         <img src="school-logo.png" alt="Swarajya Gurukul" style="width: 80px; height: 80px; object-fit: contain;">
         <span class="logo-text" style="font-size: 16px; font-weight: 800; color: #b8860b;">SWARAJYA GURUKUL</span>
