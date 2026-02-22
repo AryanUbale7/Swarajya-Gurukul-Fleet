@@ -42,7 +42,6 @@
         .chart-box { background: white; padding: 28px; border-radius: 24px; border: 1px solid #e2e8f0; height: 420px; box-shadow: var(--card-shadow); }
         
         .table-box { background: white; padding: 32px; border-radius: 24px; border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); }
-        /* Adjusted grid for Student boarding stats */
         .table-row { display: grid; grid-template-columns: 0.5fr 1fr 1fr 1fr 0.8fr 0.6fr; padding: 18px 12px; border-bottom: 1px solid #f1f5f9; align-items: center; }
         
         .status-pill { padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
@@ -60,30 +59,14 @@
         <span class="logo-text">SWARAJYA GURUKUL</span>
     </a>
     <nav class="nav-group">
-        <a href="index.html" class="nav-item" id="nav-dash">
-            <i data-lucide="layout-dashboard"></i> Dashboard
-        </a>
-        <a href="fleet.html" class="nav-item" id="nav-fleet">
-            <i data-lucide="map"></i> Live Fleet
-        </a>
-        <a href="bus-health.html" class="nav-item" id="nav-health">
-            <i data-lucide="heart-pulse"></i> Bus Health
-        </a>
-        <a href="routes.html" class="nav-item" id="nav-routes">
-            <i data-lucide="route"></i> Routes
-        </a>
-        <a href="students.html" class="nav-item" id="nav-students">
-            <i data-lucide="graduation-cap"></i> Students
-        </a>
-        <a href="driver-admin.html" class="nav-item" id="nav-driver">
-            <i data-lucide="users"></i> Driver Monitor
-        </a>
-        <a href="manage-assignment.html" class="nav-item" id="nav-duty">
-            <i data-lucide="user-cog"></i> Duty Assignments
-        </a>
-        <a href="settings.html" class="nav-item" id="nav-settings">
-            <i data-lucide="settings"></i> Settings
-        </a>
+        <a href="index.html" class="nav-item active" id="nav-dash"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a href="fleet.html" class="nav-item" id="nav-fleet"><i data-lucide="map"></i> Live Fleet</a>
+        <a href="bus-health.html" class="nav-item" id="nav-health"><i data-lucide="heart-pulse"></i> Bus Health</a>
+        <a href="routes.html" class="nav-item" id="nav-routes"><i data-lucide="route"></i> Routes</a>
+        <a href="students.html" class="nav-item" id="nav-students"><i data-lucide="graduation-cap"></i> Students</a>
+        <a href="driver-admin.html" class="nav-item" id="nav-driver"><i data-lucide="users"></i> Driver Monitor</a>
+        <a href="manage-assignment.html" class="nav-item" id="nav-duty"><i data-lucide="user-cog"></i> Duty Assignments</a>
+        <a href="settings.html" class="nav-item" id="nav-settings"><i data-lucide="settings"></i> Settings</a>
     </nav>
     <div class="sidebar-footer" style="margin-top:auto;"><div class="nav-item" onclick="logout()" style="color:#ef4444;"><i data-lucide="log-out"></i> Logout</div></div>
 </div>
@@ -112,6 +95,8 @@
 <script>
     lucide.createIcons();
 
+    let capacityChart; // Global variable for the doughnut chart
+
     const busData = [
         {id: 1, area: "Mira Road", status: "Moving"},
         {id: 2, area: "Bhayandar East", status: "Moving"},
@@ -122,10 +107,30 @@
 
     function logout() { localStorage.removeItem("token"); window.location.href = "login.html"; }
 
+    // Logic to calculate live stats from localStorage
+    function getLiveBoardingStats() {
+        const now = new Date();
+        const todayStr = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+        let p = 0, a = 0;
+
+        globalStudentData.forEach(s => {
+            const status = localStorage.getItem(`status_${s.id}_${todayStr}`);
+            if(status === 'Present') p++;
+            else if(status === 'Absent') a++;
+        });
+
+        return { 
+            present: p, 
+            absent: a, 
+            pending: globalStudentData.length - (p + a) 
+        };
+    }
+
     function renderDashboard() {
         const tableBody = document.getElementById('busTableBody');
         const now = new Date();
         const todayStr = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+        const stats = getLiveBoardingStats();
 
         tableBody.innerHTML = `
             <div class="table-row header" style="font-weight:700; color:var(--text-muted); font-size:11px; border-bottom: 2px solid #f1f5f9; margin-bottom: 10px;">
@@ -137,16 +142,11 @@
                 <div>STATUS</div>
             </div>`;
 
-        let totalPresent = 0;
-        let totalAbsent = 0;
-
         busData.forEach(bus => {
-            // Staff Logic
             const isCPresent = localStorage.getItem("cleaner_present_" + bus.id) === todayStr;
             const history = JSON.parse(localStorage.getItem("history_" + bus.id)) || [];
             const isDPresent = history.some(r => r.date === todayStr && r.status === 'Present');
 
-            // Student Boarding Logic from shared students.js
             const busStudents = globalStudentData.filter(s => s.bus === "B-0" + bus.id);
             let p = 0, a = 0;
             busStudents.forEach(s => {
@@ -154,38 +154,55 @@
                 if(status === 'Present') p++;
                 if(status === 'Absent') a++;
             });
-            totalPresent += p;
-            totalAbsent += a;
 
             tableBody.innerHTML += `
                 <div class="table-row">
                     <div style="font-weight:700;">#B-0${bus.id}</div>
                     <div><span style="font-size:13px;font-weight:600;">Driver ${bus.id}</span><br><small class="status-pill ${isDPresent ? 'present' : 'waiting'}">${isDPresent ? 'Active' : 'Offline'}</small></div>
                     <div><span style="font-size:13px;font-weight:600;">Helper ${bus.id}</span><br><small class="status-pill ${isCPresent ? 'present' : 'waiting'}">${isCPresent ? 'On-Board' : 'Pending'}</small></div>
-                    <div>
-                        <b style="color:#10b981">${p}</b> / <b style="color:#ef4444">${a}</b>
-                        <br><small style="color:var(--text-muted);font-size:9px;">Total: ${busStudents.length}</small>
-                    </div>
+                    <div><b style="color:#10b981">${p}</b> / <b style="color:#ef4444">${a}</b><br><small style="color:var(--text-muted);font-size:9px;">Total: ${busStudents.length}</small></div>
                     <div style="color:var(--text-muted);font-size:12px;">${bus.area}</div>
                     <div><span class="status-pill moving">${bus.status}</span></div>
                 </div>`;
         });
 
-        document.getElementById('presentCount').innerText = totalPresent;
-        document.getElementById('absentCount').innerText = totalAbsent;
+        document.getElementById('presentCount').innerText = stats.present;
+        document.getElementById('absentCount').innerText = stats.absent;
+
+        // Update circle chart live
+        if (capacityChart) {
+            capacityChart.data.datasets[0].data = [stats.present, stats.absent, stats.pending];
+            capacityChart.update();
+        }
     }
 
     function renderCharts() {
         const labels = busData.map(b => b.area);
         const counts = busData.map(b => globalStudentData.filter(s => s.bus === "B-0"+b.id).length);
-        new Chart(document.getElementById('areaChart'), { type: 'bar', data: { labels: labels, datasets: [{ label: 'Total Students Assigned', data: counts, backgroundColor: '#6366f1', borderRadius: 8 }] }, options: { maintainAspectRatio: false } });
-        new Chart(document.getElementById('capacityChart'), { type: 'doughnut', data: { labels: ['Present', 'Absent', 'Pending'], datasets: [{ data: [10, 5, 175], backgroundColor: ['#10b981', '#ef4444', '#e2e8f0'] }] }, options: { maintainAspectRatio: false, cutout: '75%' } });
+        const stats = getLiveBoardingStats();
+
+        // Area Chart (Bar)
+        new Chart(document.getElementById('areaChart'), { 
+            type: 'bar', 
+            data: { labels: labels, datasets: [{ label: 'Total Students Assigned', data: counts, backgroundColor: '#6366f1', borderRadius: 8 }] }, 
+            options: { maintainAspectRatio: false } 
+        });
+
+        // Capacity Chart (Doughnut) - Connected to Live Stats
+        capacityChart = new Chart(document.getElementById('capacityChart'), { 
+            type: 'doughnut', 
+            data: { 
+                labels: ['Present', 'Absent', 'Pending'], 
+                datasets: [{ data: [stats.present, stats.absent, stats.pending], backgroundColor: ['#10b981', '#ef4444', '#e2e8f0'] }] 
+            }, 
+            options: { maintainAspectRatio: false, cutout: '75%' } 
+        });
     }
 
     window.onload = () => {
-        renderDashboard();
         renderCharts();
-        setInterval(renderDashboard, 3000); // Live sync every 3 seconds
+        renderDashboard();
+        setInterval(renderDashboard, 3000); // Live sync circle & cards every 3 seconds
     };
 </script>
 </body>
